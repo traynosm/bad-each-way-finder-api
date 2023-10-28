@@ -10,7 +10,7 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 
 namespace bad_each_way_finder_api.Migrations
 {
-    [DbContext(typeof(BadEachWayFinderContext))]
+    [DbContext(typeof(BadEachWayFinderApiContext))]
     [Migration("20231025142210_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {

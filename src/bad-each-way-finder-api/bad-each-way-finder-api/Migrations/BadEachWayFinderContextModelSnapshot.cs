@@ -9,7 +9,7 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 
 namespace bad_each_way_finder_api.Migrations
 {
-    [DbContext(typeof(BadEachWayFinderContext))]
+    [DbContext(typeof(BadEachWayFinderApiContext))]
     partial class BadEachWayFinderContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

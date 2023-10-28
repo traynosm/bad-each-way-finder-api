@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace bad_each_way_finder_api.Areas.Identity.Data;
 
-public class BadEachWayFinderContext : IdentityDbContext<IdentityUser>
+public class BadEachWayFinderApiContext : IdentityDbContext<IdentityUser>
 {
-    public BadEachWayFinderContext(DbContextOptions<BadEachWayFinderContext> options)
+    public BadEachWayFinderApiContext(DbContextOptions<BadEachWayFinderApiContext> options)
         : base(options)
     {
     }
