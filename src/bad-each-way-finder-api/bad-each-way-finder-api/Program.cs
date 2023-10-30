@@ -14,7 +14,7 @@ namespace bad_each_way_finder_api
                 throw new InvalidOperationException("Connection string 'BadEachWayFinderApi' not found.");
 
             builder.Services.AddDbContext<BadEachWayFinderApiContext>(options => 
-            options.UseSqlite(connectionString));
+            options.UseSqlServer(connectionString));
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => 
             options.SignIn.RequireConfirmedAccount = true)
