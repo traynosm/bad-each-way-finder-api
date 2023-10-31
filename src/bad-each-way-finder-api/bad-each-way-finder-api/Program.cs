@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using bad_each_way_finder_api.Areas.Identity.Data;
+using Microsoft.OpenApi.Models;
 
 namespace bad_each_way_finder_api
 {
@@ -24,7 +25,16 @@ namespace bad_each_way_finder_api
 
             builder.Services.AddControllers();
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             // Configure the HTTP request pipeline.
 
