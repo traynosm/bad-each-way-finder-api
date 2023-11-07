@@ -1,9 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using bad_each_way_finder_api_auth.Clients;
+using bad_each_way_finder_api_auth.Interfaces;
+using Betfair.ExchangeComparison.Auth;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bad_each_way_finder_api.Configuration
 {
@@ -11,7 +9,8 @@ namespace bad_each_way_finder_api.Configuration
     {
         public static void ConfigureAuth(this IServiceCollection services)
         {
-
+            services.AddTransient<IAuthClient, AuthClient>();
+            services.AddTransient<IAuthHandler, AuthHandler>();
         }
     }
 }

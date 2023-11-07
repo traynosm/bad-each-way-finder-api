@@ -1,7 +1,7 @@
+using bad_each_way_finder_api.Areas.Identity.Data;
+using bad_each_way_finder_api.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using bad_each_way_finder_api.Areas.Identity.Data;
-using Microsoft.OpenApi.Models;
 
 namespace bad_each_way_finder_api
 {
@@ -27,6 +27,7 @@ namespace bad_each_way_finder_api
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.ConfigureAuth();
 
             var app = builder.Build();
 
