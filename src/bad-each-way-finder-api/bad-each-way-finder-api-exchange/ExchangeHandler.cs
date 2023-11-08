@@ -4,6 +4,7 @@ using bad_each_way_finder_api_domain.Exchange;
 using bad_each_way_finder_api_exchange.Client;
 using bad_each_way_finder_api_exchange.Interfaces;
 using bad_each_way_finder_api_exchange.Settings;
+using bad_each_way_finder_api_domain.Extensions;
 using Microsoft.Extensions.Options;
 
 namespace bad_each_way_finder_api_exchange
@@ -50,6 +51,35 @@ namespace bad_each_way_finder_api_exchange
 
             return eventTypes;
         }
+        public IList<EventResult> ListEvents(
+            string eventTypeId = "7", TimeRange? timeRange = null)
+        {
+            var time = new TimeRange();
+
+            if (timeRange == null)
+            {
+                time = new TimeRange()
+                {
+                    From = DateTime.Now,
+                    To = DateTime.Today.AddDays(1)
+                };
+            }
+            else
+            {
+                time = timeRange;
+            }
+
+            var marketFilter = new MarketFilter();
+            marketFilter.EventTypeIds = new List<string> { eventTypeId }.ToHashSet();
+            marketFilter.MarketStartTime = time;
+            marketFilter.MarketCountries = eventTypeId.CountryCodes();
+
+            var events = _exchangeClient?.ListEvents(marketFilter) ??
+                throw new NullReferenceException($"Events null.");
+
+            return events;
+        }
+
 
 
 

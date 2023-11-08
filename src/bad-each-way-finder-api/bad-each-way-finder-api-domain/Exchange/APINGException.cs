@@ -3,13 +3,13 @@ using System.Runtime.Serialization;
 
 namespace bad_each_way_finder_api_domain.Exchange
 {
-    public class APINGException : System.Exception
+    public class APINGException : Exception
     {
         public APINGException(SerializationInfo info, StreamingContext context)
         {
-            this.ErrorDetails = info.GetString("errorDetails");
-            this.ErrorCode = info.GetString("errorCode");
-            this.RequestUUID = info.GetString("requestUUID");
+            ErrorDetails = info.GetString("errorDetails");
+            ErrorCode = info.GetString("errorCode");
+            RequestUUID = info.GetString("requestUUID");
         }
 
         public APINGException()

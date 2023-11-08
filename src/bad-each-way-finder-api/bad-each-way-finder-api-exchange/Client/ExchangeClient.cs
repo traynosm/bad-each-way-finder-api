@@ -115,6 +115,13 @@ namespace bad_each_way_finder_api_exchange.Client
             args[LOCALE] = locale;
             return Invoke<List<EventTypeResult>>(LIST_EVENT_TYPES_METHOD, args);
         }
+        public IList<EventResult> ListEvents(MarketFilter marketFilter, string locale = null)
+        {
+            var args = new Dictionary<string, object>();
+            args[FILTER] = marketFilter;
+            args[LOCALE] = locale;
+            return Invoke<List<EventResult>>(LIST_EVENTS_METHOD, args);
+        }
 
     }
 }

@@ -6,5 +6,7 @@ namespace bad_each_way_finder_api_exchange.Interfaces
     public interface IExchangeHandler : IBetfairHandler
     {
         IList<EventTypeResult> ListEventTypes();
+        IList<EventResult> ListEvents(
+            string eventTypeId = "7", TimeRange? timeRange = null);
     }
 }
