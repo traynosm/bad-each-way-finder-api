@@ -1,4 +1,6 @@
-﻿namespace bad_each_way_finder_api_exchange.Json
+﻿using Newtonsoft.Json;
+
+namespace bad_each_way_finder_api_exchange.Json
 {
     public class JsonConvert
     {

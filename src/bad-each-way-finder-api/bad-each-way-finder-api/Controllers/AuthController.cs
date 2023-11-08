@@ -1,6 +1,5 @@
 ﻿using bad_each_way_finder_api_auth.Interfaces;
 using bad_each_way_finder_api_domain.Enums;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bad_each_way_finder_api.Controllers
@@ -18,7 +17,7 @@ namespace bad_each_way_finder_api.Controllers
         public ActionResult Login()
         {
             var loginSuccess = _authHandler.Login(
-                "cloudwalking", "cavendish1", Bookmaker.BetfairExchange);
+                "", "", Bookmaker.BetfairExchange);
             return Ok(loginSuccess);
         }
     }

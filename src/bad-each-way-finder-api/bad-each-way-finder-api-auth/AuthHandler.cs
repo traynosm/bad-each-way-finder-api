@@ -12,7 +12,7 @@ namespace Betfair.ExchangeComparison.Auth
 
         public Dictionary<Bookmaker, string> SessionTokens { get; private set; }
         public Dictionary<Bookmaker, DateTime> TokenExpiries { get; set; }
-        public string AppKey { get; private set; } = "wKLhgVx4ANEga3sf";
+        public string AppKey { get; private set; }
         private string Username { get; set; }
         private string Password { get; set; }
 
@@ -24,17 +24,17 @@ namespace Betfair.ExchangeComparison.Auth
             SessionTokens = new Dictionary<Bookmaker, string>();
             TokenExpiries = new Dictionary<Bookmaker, DateTime>();
 
-            //Username = Environment.GetEnvironmentVariable("USERNAME") != null ?
-            //    Environment.GetEnvironmentVariable("USERNAME")! :
-            //    logins.Value.USERNAME!;
+            Username = Environment.GetEnvironmentVariable("BETFAIRUSERNAME") != null ?
+                Environment.GetEnvironmentVariable("BETFAIRUSERNAME")! :
+                logins.Value.BETFAIRUSERNAME!;
 
-            //Password = Environment.GetEnvironmentVariable("PASSWORD") != null ?
-            //    Environment.GetEnvironmentVariable("PASSWORD")! :
-            //    logins.Value.PASSWORD!;
+            Password = Environment.GetEnvironmentVariable("PASSWORD") != null ?
+                Environment.GetEnvironmentVariable("PASSWORD")! :
+                logins.Value.PASSWORD!;
 
-            //AppKey = Environment.GetEnvironmentVariable("APP_KEY") != null ?
-            //    Environment.GetEnvironmentVariable("APP_KEY")! :
-            //    logins.Value.APP_KEY!;
+            AppKey = Environment.GetEnvironmentVariable("APP_KEY") != null ?
+                Environment.GetEnvironmentVariable("APP_KEY")! :
+                logins.Value.APP_KEY!;
         }
 
         public bool TryLogin(Bookmaker bookmaker)
