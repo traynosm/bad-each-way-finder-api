@@ -48,5 +48,23 @@ namespace bad_each_way_finder_api.Controllers
                 return BadRequest(string.Empty);
             }
         }
+
+        [HttpGet]
+        [Route("GetMarketCatalogues")]
+        public IActionResult GetMarketCatalogues()
+        {
+            var loginSuccess = _exchangeHandler.TryLogin();
+
+            if (loginSuccess)
+            {
+                var result = _exchangeHandler.ListMarketCatalogues();
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(string.Empty);
+            }
+        }
+
     }
 }

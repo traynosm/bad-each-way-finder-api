@@ -122,6 +122,17 @@ namespace bad_each_way_finder_api_exchange.Client
             args[LOCALE] = locale;
             return Invoke<List<EventResult>>(LIST_EVENTS_METHOD, args);
         }
+        public IList<MarketCatalogue> ListMarketCatalogue(MarketFilter marketFilter, ISet<MarketProjection> marketProjections, MarketSort marketSort, string maxResult = "100", string locale = null)
+        {
+            var args = new Dictionary<string, object>();
+            args[FILTER] = marketFilter;
+            args[MARKET_PROJECTION] = marketProjections;
+            args[SORT] = marketSort;
+            args[MAX_RESULTS] = maxResult;
+            args[LOCALE] = locale;
+            return Invoke<List<MarketCatalogue>>(LIST_MARKET_CATALOGUE_METHOD, args);
+        }
+
 
     }
 }

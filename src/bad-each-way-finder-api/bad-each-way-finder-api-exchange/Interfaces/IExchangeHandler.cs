@@ -8,5 +8,7 @@ namespace bad_each_way_finder_api_exchange.Interfaces
         IList<EventTypeResult> ListEventTypes();
         IList<EventResult> ListEvents(
             string eventTypeId = "7", TimeRange? timeRange = null);
+        IList<MarketCatalogue> ListMarketCatalogues(
+    string eventTypeId = "7", TimeRange? timeRange = null, IEnumerable<string>? eventIds = null);
     }
 }
