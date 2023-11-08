@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using bad_each_way_finder_api_domain.Exchange;
+using Newtonsoft.Json;
 
 namespace bad_each_way_finder_api_exchange.Json
 {
@@ -12,7 +13,7 @@ namespace bad_each_way_finder_api_exchange.Json
         public T Result { get; set; }
 
         [JsonProperty(PropertyName = "error", NullValueHandling = NullValueHandling.Ignore)]
-        public System.Exception Error { get; set; }
+        public BetfairException Error { get; set; }
 
         [JsonProperty(PropertyName = "id")]
         public object Id { get; set; }

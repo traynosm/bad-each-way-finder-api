@@ -1,12 +1,59 @@
-﻿using bad_each_way_finder_api_exchange.Interfaces;
+﻿using bad_each_way_finder_api_auth.Interfaces;
+using bad_each_way_finder_api_domain.Enums;
+using bad_each_way_finder_api_domain.Exchange;
+using bad_each_way_finder_api_exchange.Client;
+using bad_each_way_finder_api_exchange.Interfaces;
+using bad_each_way_finder_api_exchange.Settings;
+using Microsoft.Extensions.Options;
 
 namespace bad_each_way_finder_api_exchange
 {
     public class ExchangeHandler : IExchangeHandler
     {
-        public ExchangeHandler()
+        private readonly IExchangeClient _exchangeClient;
+        private readonly IAuthHandler _authHandler;
+        private readonly IOptions<ExchangeSettings> _options;
+
+        private const Bookmaker _bookmaker = Bookmaker.BetfairExchange;
+
+        public ExchangeHandler(IExchangeClient exchangeClient, IAuthHandler authHandler, 
+            IOptions<ExchangeSettings> options)
         {
-            
+            _exchangeClient = exchangeClient;
+            _authHandler = authHandler;
+            _options = options;
+
+            if (_authHandler.TryLogin(_bookmaker))
+            {
+                _exchangeClient = new ExchangeClient(
+                    _options.Value.Url,
+                    _authHandler.AppKey,
+                    _authHandler.SessionTokens[_bookmaker]);
+            }
         }
+
+        public bool TryLogin() =>
+            _authHandler.TryLogin(_bookmaker);
+
+        public bool Login(string username = "", string password = "") =>
+            _authHandler.Login(username, password, _bookmaker);
+
+        public bool SessionValid() =>
+            _authHandler.SessionValid(_bookmaker);
+
+        public IList<EventTypeResult> ListEventTypes()
+        {
+            var marketFilter = new MarketFilter();
+
+            var eventTypes = _exchangeClient?.ListEventTypes(marketFilter) ??
+                throw new NullReferenceException($"Event Types null.");
+
+            return eventTypes;
+        }
+
+
+
+
+        //Expose methods that
     }
 }

@@ -1,7 +1,7 @@
-﻿using bad_each_way_finder_api_exchange.Interfaces;
+﻿using bad_each_way_finder_api_domain.Exchange;
+using bad_each_way_finder_api_exchange.Interfaces;
 using bad_each_way_finder_api_exchange.Json;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Text;
 
 namespace bad_each_way_finder_api_exchange.Client
@@ -99,7 +99,7 @@ namespace bad_each_way_finder_api_exchange.Client
             }
         }
 
-        private static System.Exception ReconstituteException(Betfair.ExchangeComparison.Exchange.Model.Exception ex)
+        private static Exception ReconstituteException(BetfairException ex)
         {
             var data = ex.Data;
 
