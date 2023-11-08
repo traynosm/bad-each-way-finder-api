@@ -16,7 +16,6 @@ namespace bad_each_way_finder_api
             var pathToContentRoot = Directory.GetCurrentDirectory();
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(pathToContentRoot)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -41,9 +40,9 @@ namespace bad_each_way_finder_api
             // Add services to the container.
 
             builder.Services.AddControllers();
-
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.ConfigureAuth();
             builder.Services.ConfigureExchange();
 
@@ -55,9 +54,6 @@ namespace bad_each_way_finder_api
             builder.Configuration.GetSection("LoginSettings")
                 .Bind(o));
 
-
-
-
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -67,13 +63,21 @@ namespace bad_each_way_finder_api
             }
 
             // Configure the HTTP request pipeline.
-
+            app.UseDeveloperExceptionPage();
+            app.UseRouting();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
+            //app.MapControllers();
 
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            
 
             app.Run();
         }
