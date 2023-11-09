@@ -32,6 +32,29 @@ namespace bad_each_way_finder_api_domain.Extensions
 
             return new HashSet<string>();
         }
+        public static HashSet<string> MarketTypes(this Sport sport)
+        {
+            return MarketTypes(sport.SportMap());
+        }
+
+        public static HashSet<string> MarketTypes(this string eventTypeId)
+        {
+            switch (eventTypeId)
+            {
+                case "7":
+                    return new HashSet<string>()
+                    {
+                        "WIN",
+                        "PLACE",
+                        "OTHER_PLACE"
+                    };
+            }
+
+            return new HashSet<string>();
+        }
+
     }
+
+
 
 }

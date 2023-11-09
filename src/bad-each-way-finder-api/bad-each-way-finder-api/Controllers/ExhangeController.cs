@@ -6,11 +6,11 @@ namespace bad_each_way_finder_api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class PropositionController : ControllerBase
+    public class ExhangeController : ControllerBase
     {
         private readonly IExchangeHandler _exchangeHandler;
 
-        public PropositionController(IExchangeHandler exchangeHandler)
+        public ExhangeController(IExchangeHandler exchangeHandler)
         {
             _exchangeHandler = exchangeHandler;
         }
@@ -48,5 +48,41 @@ namespace bad_each_way_finder_api.Controllers
                 return BadRequest(string.Empty);
             }
         }
+
+        [HttpGet]
+        [Route("GetMarketCatalogues")]
+        public IActionResult GetMarketCatalogues()
+        {
+            var loginSuccess = _exchangeHandler.TryLogin();
+
+            if (loginSuccess)
+            {
+                var result = _exchangeHandler.ListMarketCatalogues();
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(string.Empty);
+            }
+        }
+        [HttpGet]
+        [Route("GetMarketBooks")]
+        public IActionResult GetMarketBooks()
+        {
+            var loginSuccess = _exchangeHandler.TryLogin();
+
+            if (loginSuccess)
+            {
+                var marketCatalogues = _exchangeHandler.ListMarketCatalogues();
+                var result = _exchangeHandler.ListMarketBooks(marketCatalogues
+                    .Select(m => m.MarketId).ToList());
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(string.Empty);
+            }
+        }
+
     }
 }

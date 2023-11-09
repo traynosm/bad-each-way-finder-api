@@ -80,10 +80,62 @@ namespace bad_each_way_finder_api_exchange
             return events;
         }
 
+        public IList<MarketCatalogue> ListMarketCatalogues(
+    string eventTypeId = "7", TimeRange? timeRange = null, IEnumerable<string>? eventIds = null)
+        {
+            var marketFilter = new MarketFilter();
+            marketFilter.EventTypeIds = new List<string> { eventTypeId }.ToHashSet();
 
+            if (eventIds != null)
+            {
+                marketFilter.EventIds = eventIds.ToHashSet();
+            }
 
+            var time = new TimeRange();
 
+            if (timeRange == null)
+            {
+                time.From = DateTime.Now;
+                time.To = DateTime.Today.AddDays(1);
+            }
+            else
+            {
+                time = timeRange;
+            }
 
-        //Expose methods that
+            marketFilter.MarketStartTime = time;
+            marketFilter.MarketCountries = eventTypeId.CountryCodes();
+            marketFilter.MarketTypeCodes = eventTypeId.MarketTypes();
+            var marketSort = MarketSort.FIRST_TO_START;
+            var maxResults = "1000";
+
+            //as an example we requested runner metadata 
+            ISet<MarketProjection> marketProjections = new HashSet<MarketProjection>();
+            marketProjections.Add(MarketProjection.EVENT);
+            marketProjections.Add(MarketProjection.MARKET_DESCRIPTION);
+
+            var marketCatalogues = _exchangeClient!.ListMarketCatalogue(
+                marketFilter, marketProjections, marketSort, maxResults);
+
+            return marketCatalogues;
+        }
+
+        public IList<MarketBook> ListMarketBooks(IList<string> marketIds)
+        {
+            //as an example we requested runner metadata 
+            PriceProjection priceProjection = new PriceProjection()
+            {
+                PriceData = new HashSet<PriceData>
+                {
+                    PriceData.EX_BEST_OFFERS,
+                    PriceData.EX_TRADED
+                },
+            };
+
+            var marketBooks = _exchangeClient!.ListMarketBook(
+                marketIds, priceProjection);
+
+            return marketBooks;
+        }
     }
 }
