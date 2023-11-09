@@ -6,11 +6,11 @@ namespace bad_each_way_finder_api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class PropositionController : ControllerBase
+    public class ExhangeController : ControllerBase
     {
         private readonly IExchangeHandler _exchangeHandler;
 
-        public PropositionController(IExchangeHandler exchangeHandler)
+        public ExhangeController(IExchangeHandler exchangeHandler)
         {
             _exchangeHandler = exchangeHandler;
         }
