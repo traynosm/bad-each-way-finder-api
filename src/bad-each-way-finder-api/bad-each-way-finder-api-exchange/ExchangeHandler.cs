@@ -120,11 +120,22 @@ namespace bad_each_way_finder_api_exchange
             return marketCatalogues;
         }
 
+        public IList<MarketBook> ListMarketBooks(IList<string> marketIds)
+        {
+            //as an example we requested runner metadata 
+            PriceProjection priceProjection = new PriceProjection()
+            {
+                PriceData = new HashSet<PriceData>
+                {
+                    PriceData.EX_BEST_OFFERS,
+                    PriceData.EX_TRADED
+                },
+            };
 
+            var marketBooks = _exchangeClient!.ListMarketBook(
+                marketIds, priceProjection);
 
-
-
-
-        //Expose methods that
+            return marketBooks;
+        }
     }
 }

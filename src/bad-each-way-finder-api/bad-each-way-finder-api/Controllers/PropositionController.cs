@@ -65,6 +65,24 @@ namespace bad_each_way_finder_api.Controllers
                 return BadRequest(string.Empty);
             }
         }
+        [HttpGet]
+        [Route("GetMarketBooks")]
+        public IActionResult GetMarketBooks()
+        {
+            var loginSuccess = _exchangeHandler.TryLogin();
+
+            if (loginSuccess)
+            {
+                var marketCatalogues = _exchangeHandler.ListMarketCatalogues();
+                var result = _exchangeHandler.ListMarketBooks(marketCatalogues
+                    .Select(m => m.MarketId).ToList());
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(string.Empty);
+            }
+        }
 
     }
 }

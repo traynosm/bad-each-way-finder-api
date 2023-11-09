@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json.Converters;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace bad_each_way_finder_api_domain.Exchange
 {
