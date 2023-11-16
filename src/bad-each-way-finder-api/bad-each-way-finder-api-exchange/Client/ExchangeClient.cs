@@ -9,7 +9,6 @@ namespace bad_each_way_finder_api_exchange.Client
     public class ExchangeClient : HttpClient, IExchangeClient
     {
         public string EndPoint { get; private set; }
-        private static readonly IDictionary<string, Type> operationReturnTypeMap = new Dictionary<string, Type>();
         public const string APPKEY_HEADER = "X-Application";
         public const string SESSION_TOKEN_HEADER = "X-Authentication";
         public WebHeaderCollection CustomHeaders { get; set; }
@@ -80,7 +79,7 @@ namespace bad_each_way_finder_api_exchange.Client
                 JsonConvert.Export(call, writer);
             }
             Console.WriteLine("Calling Exchange: " + method + " With args: " +
-                JsonConvert.Serialize<IDictionary<string, object>>(args));
+                JsonConvert.Serialize(args));
 
             using (WebResponse response = request.GetResponse())
             using (Stream stream = response.GetResponseStream())

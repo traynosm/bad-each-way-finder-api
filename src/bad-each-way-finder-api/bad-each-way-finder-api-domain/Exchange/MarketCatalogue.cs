@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace bad_each_way_finder_api_domain.Exchange
 {
     public class MarketCatalogue
     {
+        [Key]
         [JsonProperty(PropertyName = "marketId")]
         public string MarketId { get; set; }
 
@@ -15,19 +17,19 @@ namespace bad_each_way_finder_api_domain.Exchange
         public bool IsMarketDataDelayed { get; set; }
 
         [JsonProperty(PropertyName = "description")]
-        public MarketDescription Description { get; set; }
+        public MarketDescription? Description { get; set; }
 
         [JsonProperty(PropertyName = "runners")]
         public List<RunnerDescription> Runners { get; set; }
 
         [JsonProperty(PropertyName = "eventType")]
-        public EventType EventType { get; set; }
+        public EventType? EventType { get; set; }
 
         [JsonProperty(PropertyName = "event")]
-        public Event Event { get; set; }
+        public Event? Event { get; set; }
 
         [JsonProperty(PropertyName = "competition")]
-        public Competition Competition { get; set; }
+        public Competition? Competition { get; set; }
 
         public override string ToString()
         {

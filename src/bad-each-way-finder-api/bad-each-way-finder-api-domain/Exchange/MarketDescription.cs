@@ -5,6 +5,8 @@ namespace bad_each_way_finder_api_domain.Exchange
 {
     public class MarketDescription
     {
+        public string Id { get; set; }
+        
         [JsonProperty(PropertyName = "persistenceEnabled")]
         public bool IsPersistenceEnabled { get; set; }
 
@@ -30,7 +32,7 @@ namespace bad_each_way_finder_api_domain.Exchange
         public string MarketType { get; set; }
 
         [JsonProperty(PropertyName = "regulator")]
-        public string Regulator { get; set; }
+        public string? Regulator { get; set; }
 
         [JsonProperty(PropertyName = "marketBaseRate")]
         public double MarketBaseRate { get; set; }
@@ -39,16 +41,16 @@ namespace bad_each_way_finder_api_domain.Exchange
         public bool IsDiscountAllowed { get; set; }
 
         [JsonProperty(PropertyName = "wallet")]
-        public string Wallet { get; set; }
+        public string? Wallet { get; set; }
 
         [JsonProperty(PropertyName = "rules")]
-        public string Rules { get; set; }
+        public string? Rules { get; set; }
 
         [JsonProperty(PropertyName = "rulesHasDate")]
         public bool RulesHasDate { get; set; }
 
         [JsonProperty(PropertyName = "clarifications")]
-        public string Clarifications { get; set; }
+        public string? Clarifications { get; set; }
 
         public override string ToString()
         {

@@ -1,19 +1,26 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace bad_each_way_finder_api_domain.Exchange
 {
     public class StartingPrices
     {
+        [Key]
+        public int Id { get; set; }
+        
         [JsonProperty(PropertyName = "nearPrice")]
         public double NearPrice { get; set; }
 
         [JsonProperty(PropertyName = "farPrice")]
         public double FarPrice { get; set; }
 
+        [NotMapped]
         [JsonProperty(PropertyName = "backStakeTaken")]
         public List<PriceSize> BackStakeTaken { get; set; }
 
+        [NotMapped]
         [JsonProperty(PropertyName = "layLiabilityTaken")]
         public List<PriceSize> LayLiabilityTaken { get; set; }
 

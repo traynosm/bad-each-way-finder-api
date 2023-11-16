@@ -1,4 +1,5 @@
-﻿using bad_each_way_finder_api_exchange.Interfaces;
+﻿using bad_each_way_finder_api_domain.CommonInterfaces;
+using bad_each_way_finder_api_exchange.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bad_each_way_finder_api.Controllers
@@ -6,13 +7,15 @@ namespace bad_each_way_finder_api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ExhangeController : ControllerBase
+    public class ExchangeController : ControllerBase
     {
         private readonly IExchangeHandler _exchangeHandler;
+        private readonly IExchangeDatabaseService _databaseService;
 
-        public ExhangeController(IExchangeHandler exchangeHandler)
+        public ExchangeController(IExchangeHandler exchangeHandler, IExchangeDatabaseService databaseService)
         {
             _exchangeHandler = exchangeHandler;
+            _databaseService = databaseService;
         }
 
         [HttpGet]
@@ -58,6 +61,7 @@ namespace bad_each_way_finder_api.Controllers
             if (loginSuccess)
             {
                 var result = _exchangeHandler.ListMarketCatalogues();
+                _databaseService.AddOrUpdateMarketCatalogues(result);
                 return Ok(result);
             }
             else
@@ -76,6 +80,8 @@ namespace bad_each_way_finder_api.Controllers
                 var marketCatalogues = _exchangeHandler.ListMarketCatalogues();
                 var result = _exchangeHandler.ListMarketBooks(marketCatalogues
                     .Select(m => m.MarketId).ToList());
+                _databaseService.AddOrUpdateMarketBooks(result);
+
                 return Ok(result);
             }
             else
@@ -83,6 +89,7 @@ namespace bad_each_way_finder_api.Controllers
                 return BadRequest(string.Empty);
             }
         }
+
 
     }
 }
