@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -6,6 +8,8 @@ namespace bad_each_way_finder_api_domain.Exchange
 {
     public class Runner
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [JsonProperty(PropertyName = "selectionId")]
         public long SelectionId { get; set; }
 
@@ -28,14 +32,17 @@ namespace bad_each_way_finder_api_domain.Exchange
         public DateTime? RemovalDate { get; set; }
 
         [JsonProperty(PropertyName = "sp")]
-        public StartingPrices StartingPrices { get; set; }
+        public StartingPrices? StartingPrices { get; set; }
 
+        [NotMapped]
         [JsonProperty(PropertyName = "ex")]
         public ExchangePrices ExchangePrices { get; set; }
 
+        [NotMapped]
         [JsonProperty(PropertyName = "orders")]
         public List<Order> Orders { get; set; }
 
+        [NotMapped]
         [JsonProperty(PropertyName = "matches")]
         public List<Match> Matches { get; set; }
 

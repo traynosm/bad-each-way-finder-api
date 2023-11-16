@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bad_each_way_finder_api.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    partial class BadEachWayFinderApiContextModelSnapshot : ModelSnapshot
+    [Migration("20231115204358_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,61 +284,6 @@ namespace bad_each_way_finder_api.Migrations
                     b.ToTable("EventTypes");
                 });
 
-            modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.MarketBook", b =>
-                {
-                    b.Property<string>("MarketId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("BetDelay")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsBspReconciled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsCrossMatching")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsInplay")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMarketDataDelayed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRunnersVoidable")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastMatchTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NumberOfActiveRunners")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfRunners")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfWinners")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalAvailable")
-                        .HasColumnType("float");
-
-                    b.Property<double>("TotalMatched")
-                        .HasColumnType("float");
-
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("MarketId");
-
-                    b.ToTable("MarketBooks");
-                });
-
             modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.MarketCatalogue", b =>
                 {
                     b.Property<string>("MarketId")
@@ -430,44 +378,6 @@ namespace bad_each_way_finder_api.Migrations
                     b.ToTable("MarketDescriptions");
                 });
 
-            modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.Runner", b =>
-                {
-                    b.Property<long>("SelectionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<double?>("AdjustmentFactor")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("Handicap")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("LastPriceTraded")
-                        .HasColumnType("float");
-
-                    b.Property<string>("MarketBookMarketId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("RemovalDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("StartingPricesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalMatched")
-                        .HasColumnType("float");
-
-                    b.HasKey("SelectionId");
-
-                    b.HasIndex("MarketBookMarketId");
-
-                    b.HasIndex("StartingPricesId");
-
-                    b.ToTable("Runners");
-                });
-
             modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.RunnerDescription", b =>
                 {
                     b.Property<long>("SelectionId")
@@ -491,28 +401,6 @@ namespace bad_each_way_finder_api.Migrations
                     b.HasIndex("MarketCatalogueMarketId");
 
                     b.ToTable("RunnerDescriptions");
-                });
-
-            modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.StartingPrices", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("ActualSP")
-                        .HasColumnType("float");
-
-                    b.Property<double>("FarPrice")
-                        .HasColumnType("float");
-
-                    b.Property<double>("NearPrice")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StartingPrices");
                 });
 
             modelBuilder.Entity("bad_each_way_finder_api_domain.Sportsbook.MarketDetail", b =>
@@ -709,19 +597,6 @@ namespace bad_each_way_finder_api.Migrations
                     b.Navigation("EventType");
                 });
 
-            modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.Runner", b =>
-                {
-                    b.HasOne("bad_each_way_finder_api_domain.Exchange.MarketBook", null)
-                        .WithMany("Runners")
-                        .HasForeignKey("MarketBookMarketId");
-
-                    b.HasOne("bad_each_way_finder_api_domain.Exchange.StartingPrices", "StartingPrices")
-                        .WithMany()
-                        .HasForeignKey("StartingPricesId");
-
-                    b.Navigation("StartingPrices");
-                });
-
             modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.RunnerDescription", b =>
                 {
                     b.HasOne("bad_each_way_finder_api_domain.Exchange.MarketCatalogue", null)
@@ -741,11 +616,6 @@ namespace bad_each_way_finder_api.Migrations
                     b.HasOne("bad_each_way_finder_api_domain.Sportsbook.MarketDetail", null)
                         .WithMany("runnerDetails")
                         .HasForeignKey("MarketDetailmarketId");
-                });
-
-            modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.MarketBook", b =>
-                {
-                    b.Navigation("Runners");
                 });
 
             modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.MarketCatalogue", b =>

@@ -1,9 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using bad_each_way_finder_api_sportsbook;
+using bad_each_way_finder_api_sportsbook.Client;
+using bad_each_way_finder_api_sportsbook.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bad_each_way_finder_api.Configuration
 {
@@ -11,6 +9,8 @@ namespace bad_each_way_finder_api.Configuration
     {
         public static void ConfigureSportsbook(this IServiceCollection services)
         {
+            services.AddSingleton<ISportsbookClient, SportsbookClient>();
+            services.AddSingleton<ISportsbookHandler, SportsbookHandler>();
 
         }
     }

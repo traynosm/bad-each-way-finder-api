@@ -96,7 +96,7 @@ namespace bad_each_way_finder_api_exchange
             if (timeRange == null)
             {
                 time.From = DateTime.Now;
-                time.To = DateTime.Today.AddDays(1);
+                time.To = DateTime.Today.AddDays(2);
             }
             else
             {
@@ -113,6 +113,9 @@ namespace bad_each_way_finder_api_exchange
             ISet<MarketProjection> marketProjections = new HashSet<MarketProjection>();
             marketProjections.Add(MarketProjection.EVENT);
             marketProjections.Add(MarketProjection.MARKET_DESCRIPTION);
+            marketProjections.Add(MarketProjection.COMPETITION);
+            marketProjections.Add(MarketProjection.EVENT_TYPE);
+            marketProjections.Add(MarketProjection.RUNNER_DESCRIPTION);
 
             var marketCatalogues = _exchangeClient!.ListMarketCatalogue(
                 marketFilter, marketProjections, marketSort, maxResults);
@@ -132,8 +135,13 @@ namespace bad_each_way_finder_api_exchange
                 },
             };
 
-            var marketBooks = _exchangeClient!.ListMarketBook(
-                marketIds, priceProjection);
+            var marketBooks = new List<MarketBook>();
+
+            foreach(var batch in marketIds.Chunk(10))
+            {
+                marketBooks.AddRange(_exchangeClient!.ListMarketBook(
+                     batch, priceProjection));
+            }
 
             return marketBooks;
         }

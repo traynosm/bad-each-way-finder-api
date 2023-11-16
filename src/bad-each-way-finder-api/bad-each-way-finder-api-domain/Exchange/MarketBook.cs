@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace bad_each_way_finder_api_domain.Exchange
 {
     public class MarketBook
     {
+        [Key]
         [JsonProperty(PropertyName = "marketId")]
         public string MarketId { get; set; }
 

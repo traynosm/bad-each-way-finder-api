@@ -1,10 +1,14 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace bad_each_way_finder_api_domain.Exchange
 {
     public class RunnerDescription
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [JsonProperty(PropertyName = "selectionId")]
         public long SelectionId { get; set; }
 
@@ -17,6 +21,7 @@ namespace bad_each_way_finder_api_domain.Exchange
         [JsonProperty(PropertyName = "sortPriority")]
         public int SortPriority { get; set; }
 
+        [NotMapped]
         [JsonProperty(PropertyName = "metadata")]
         public Dictionary<string, string> Metadata { get; set; }
 

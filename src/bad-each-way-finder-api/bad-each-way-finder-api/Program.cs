@@ -1,10 +1,14 @@
 using bad_each_way_finder_api.Areas.Identity.Data;
 using bad_each_way_finder_api.Configuration;
 using bad_each_way_finder_api.Controllers;
+using bad_each_way_finder_api.Repository;
 using bad_each_way_finder_api_auth.Settings;
+using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_exchange.Settings;
+using bad_each_way_finder_api_sportsbook.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace bad_each_way_finder_api
@@ -26,32 +30,40 @@ namespace bad_each_way_finder_api
                 .Build();
 
             var builder = WebApplication.CreateBuilder(args);
-            var connectionString = builder.Configuration
-                .GetConnectionString("BadEachWayFinderApi") ?? 
-                throw new InvalidOperationException("Connection string 'BadEachWayFinderApi' not found.");
 
-            builder.Services.AddDbContext<BadEachWayFinderApiContext>(options => 
-            options.UseSqlServer(connectionString));
+            var connectionString = configuration
+                .GetConnectionString("BadEachWayFinderApi") ??
+                    throw new InvalidOperationException("Connection string 'BadEachWayFinderApi' not found.");
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-            options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<BadEachWayFinderApiContext>();
+            builder.Services.AddDbContext<BadEachWayFinderApiContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+                options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<BadEachWayFinderApiContext>();
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.ConfigureAuth();
             builder.Services.ConfigureExchange();
+            builder.Services.ConfigureSportsbook();
+
+            builder.Services.AddScoped<IExchangeDatabaseService, ExchangeDatabaseService>();
+            builder.Services.AddScoped<ISportsbookDatabaseService, SportsbookDatabaseService>();
 
             builder.Services.Configure<ExchangeSettings>(o => 
-            builder.Configuration.GetSection("ExchangeSettings")
+            configuration.GetSection("ExchangeSettings")
+                .Bind(o));
+
+            builder.Services.Configure<SportsbookSettings>(o =>
+            configuration.GetSection("SportsbookSettings")
                 .Bind(o));
 
             builder.Services.Configure<LoginSettings>(o =>
-            builder.Configuration.GetSection("LoginSettings")
+            configuration.GetSection("LoginSettings")
                 .Bind(o));
 
             var app = builder.Build();
