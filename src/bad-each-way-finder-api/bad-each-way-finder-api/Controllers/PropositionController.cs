@@ -17,8 +17,8 @@ namespace bad_each_way_finder_api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            _propositionService.GettingStuff();
-            return Ok();
+            var races = _propositionService.BuildRaces();
+            return Ok(races);
         }
     }
 }
