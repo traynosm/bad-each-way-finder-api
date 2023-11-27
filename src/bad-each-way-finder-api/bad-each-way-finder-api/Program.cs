@@ -2,6 +2,7 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 using bad_each_way_finder_api.Configuration;
 using bad_each_way_finder_api.Controllers;
 using bad_each_way_finder_api.Repository;
+using bad_each_way_finder_api.Services;
 using bad_each_way_finder_api_auth.Settings;
 using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_exchange.Settings;
@@ -53,6 +54,9 @@ namespace bad_each_way_finder_api
 
             builder.Services.AddScoped<IExchangeDatabaseService, ExchangeDatabaseService>();
             builder.Services.AddScoped<ISportsbookDatabaseService, SportsbookDatabaseService>();
+            builder.Services.AddScoped<IPropositionDatabaseService, PropositionDatabaseService>();
+            builder.Services.AddScoped<IPropositionService, PropositionService>();
+
 
             builder.Services.Configure<ExchangeSettings>(o => 
             configuration.GetSection("ExchangeSettings")
