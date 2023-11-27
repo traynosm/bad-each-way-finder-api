@@ -1,4 +1,6 @@
 ﻿using bad_each_way_finder_api_domain.CommonInterfaces;
+using bad_each_way_finder_api_domain.DomainModel;
+using bad_each_way_finder_api_domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bad_each_way_finder_api.Controllers
@@ -18,7 +20,13 @@ namespace bad_each_way_finder_api.Controllers
         public IActionResult Get()
         {
             var races = _propositionService.BuildRaces();
-            return Ok(races);
+            var propositions = _propositionService.DeterminePropositions(races);
+            var dto = new RacesAndPropositionsDTO()
+            {
+                Races = races,
+                Propositions = propositions
+            };
+            return Ok(dto);
         }
     }
 }

@@ -13,7 +13,7 @@
         public bool SportsbookEachwayAvailable { get; set; }
         public int SportsbookNumberOfPlaces { get; set; }
         public int SportsbookPlaceFractionDenominator { get; set; }
-        public List<Runner> Runners { get; set; }
+        public List<RunnerInfo> Runners { get; set; }
         public double WinOverRound { get; set; }
         public double PlaceOverRound { get; set; }
     }

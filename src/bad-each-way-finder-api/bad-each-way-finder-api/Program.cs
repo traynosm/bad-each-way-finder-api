@@ -54,6 +54,7 @@ namespace bad_each_way_finder_api
 
             builder.Services.AddScoped<IExchangeDatabaseService, ExchangeDatabaseService>();
             builder.Services.AddScoped<ISportsbookDatabaseService, SportsbookDatabaseService>();
+            builder.Services.AddScoped<IPropositionDatabaseService, PropositionDatabaseService>();
             builder.Services.AddScoped<IPropositionService, PropositionService>();
 
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bad_each_way_finder_api.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    partial class BadEachWayFinderApiContextModelSnapshot : ModelSnapshot
+    [Migration("20231127202630_proposition")]
+    partial class proposition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,13 +229,7 @@ namespace bad_each_way_finder_api.Migrations
 
             modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.Proposition", b =>
                 {
-                    b.Property<string>("RunnerName")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("WinRunnerOddsDecimal")
-                        .HasColumnType("float");
-
-                    b.Property<string>("EventId")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("EachWayExpectedValue")
@@ -240,6 +237,10 @@ namespace bad_each_way_finder_api.Migrations
 
                     b.Property<DateTime>("EventDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("EventId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EventName")
                         .IsRequired()
@@ -262,8 +263,9 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<double>("PlaceExpectedValue")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("RecordedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("RunnerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("RunnerSelectionId")
                         .HasColumnType("bigint");
@@ -284,7 +286,10 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<double>("WinExpectedValue")
                         .HasColumnType("float");
 
-                    b.HasKey("RunnerName", "WinRunnerOddsDecimal", "EventId");
+                    b.Property<double>("WinRunnerOddsDecimal")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Propositions");
                 });

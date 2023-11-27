@@ -12,11 +12,17 @@ namespace bad_each_way_finder_api.Services
     {
         private readonly IExchangeHandler _exchangeHandler;
         private readonly ISportsbookHandler _sportsbookHandler;
+        private readonly ILogger<PropositionService> _logger;
+        private readonly IPropositionDatabaseService _propositionDatabaseService;
 
-        public PropositionService(IExchangeHandler exchangeHandler, ISportsbookHandler sportsbookHandler)
+        public PropositionService(IExchangeHandler exchangeHandler, ISportsbookHandler sportsbookHandler,
+            ILogger<PropositionService> logger, IPropositionDatabaseService propositionDatabaseService)
         {
             _exchangeHandler = exchangeHandler;
             _sportsbookHandler = sportsbookHandler;
+            _logger = logger;
+            _propositionDatabaseService = propositionDatabaseService;
+
         }
 
         public List<Race> BuildRaces()
@@ -31,9 +37,13 @@ namespace bad_each_way_finder_api.Services
                 var linkedWinMarketIds = SportsbookMarketDetails.marketDetails
                     .Select(l => l.linkedMarketId);
 
-                if(linkedWinMarketIds== null || !linkedWinMarketIds.Any())
+                if(linkedWinMarketIds == null || !linkedWinMarketIds.Any())
                 {
-                    //log this
+                    _logger.LogWarning("NO_LINKED_WIN_MARKET_IDS; " +
+                        "Source= PropositionService; " +
+                        "Action= BuildRaces; " +
+                        "Msg= No linked Win Market Ids present, cannot continue; ");
+
                     return races;
                 }
 
@@ -52,7 +62,11 @@ namespace bad_each_way_finder_api.Services
 
                 if(exchangePlaceMarketCatalogues == null || !exchangePlaceMarketCatalogues.Any())
                 {
-                    //log this
+                    _logger.LogWarning("NO_EX_PLACE_MARKET_CATALOGUES; " +
+                        "Source=PropositionService; " +
+                        "Action=BuildRaces; " +
+                        "Msg=No Exchange Place Market Catalgues present, cannot continue; ");
+
                     return races;
                 }
 
@@ -64,21 +78,49 @@ namespace bad_each_way_finder_api.Services
                 foreach (var sportsbookMarketDetail in SportsbookMarketDetails.marketDetails
                     .Where(m => m.marketStatus == "OPEN"))
                 {
+                    var mappedExchangeWinMarketCatalogue = exchangeMarketCatalogues
+                         .FirstOrDefault(m => m.MarketId == sportsbookMarketDetail.linkedMarketId);
+
+                    if (mappedExchangeWinMarketCatalogue == null)
+                    {
+                        _logger.LogWarning($"NO_MAPPED_EXCHANGE_WIN_MARKET_CATALOGU; " +
+                            $"Source=PropositionService; " +
+                            $"Action=BuildRaces; " +
+                            $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                            $"MarketId={sportsbookMarketDetail.marketId}; " +
+                            $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                            $"Msg=No Mapped Exchange Win Market Catalogue; ");
+
+                        continue;
+                    }
+
+                    var mappedEvent = mappedExchangeWinMarketCatalogue.Event;
+
+                    if (mappedEvent == null)
+                    {
+                        _logger.LogWarning("NO_MAPPED_EVENT; " +
+                            "Source=PropositionService; " +
+                            "Action=BuildRaces; " +
+                            $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                            $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                            "Msg=No Mapped Event present, cannot continue; ");
+
+                        continue;
+                    }
+
                     var mappedExchangeWinMarketBook = exchangeWinMarketBooks
                         .FirstOrDefault(m => m.MarketId == sportsbookMarketDetail.linkedMarketId);
 
                     if (mappedExchangeWinMarketBook == null)
                     {
-                        //log this
-                        continue;
-                    }
+                        _logger.LogWarning($"NO_MAPPED_EXCHANGE_WIN_MARKET_BOOK; " +
+                            $"Source=PropositionService; " +
+                            $"Action=BuildRaces; " +
+                            $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                            $"EventName={mappedEvent.Name}; " +
+                            $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                            $"Msg=No Mapped Exchange Win Market Book; ");
 
-                    var mappedExchangeWinMarketCatalogue = exchangeMarketCatalogues
-                        .FirstOrDefault(m => m.MarketId == sportsbookMarketDetail.linkedMarketId);
-
-                    if (mappedExchangeWinMarketCatalogue == null)
-                    {
-                        //log this
                         continue;
                     }
 
@@ -87,16 +129,14 @@ namespace bad_each_way_finder_api.Services
 
                     if (raceExchangePlaceMarketCatalogues == null || !raceExchangePlaceMarketCatalogues.Any())
                     {
-                        //log this
-                        continue;
-                    }
+                        _logger.LogWarning($"NO_RACE_EXCHANGE_PLACE_MARKET_CATALOGUES; " +
+                            $"Source=PropositionService; " +
+                            $"Action=BuildRaces; " +
+                            $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                            $"EventName={mappedEvent.Name}; " +
+                            $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                            $"Msg=No Mapped Exchange Win Market Book; ");
 
-                    var mappedEvent = raceExchangePlaceMarketCatalogues
-                        .First().Event;
-
-                    if (mappedEvent == null)
-                    {
-                        //log this
                         continue;
                     }
 
@@ -111,47 +151,98 @@ namespace bad_each_way_finder_api.Services
 
                     if (mappedExchangePlaceMartketBook == null)
                     {
-                        //log this
+                        _logger.LogWarning("NO_MAPPED_EXCHANGE_PLACE_MARKET_BOOK; " +
+                            "Source=PropositionService; " +
+                            "Action=BuildRaces; " +
+                            $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                            $"EventName={mappedEvent.Name}; " +
+                            $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                            "Msg=No Mapped Exchange Place Market Book present, cannot continue; ");
+
                         continue;
                     }
-                    var runnerList = new List<bad_each_way_finder_api_domain.DomainModel.Runner>();
+                    var runnerList = new List<bad_each_way_finder_api_domain.DomainModel.RunnerInfo>();
 
                     foreach (var runner in sportsbookMarketDetail.runnerDetails
-                        .Where(r => r.runnerOrder < 50))
+                        .Where(r => r.runnerOrder < 50 && r.runnerStatus == "ACTIVE"))
                     {
-                        var Runner = new bad_each_way_finder_api_domain.DomainModel.Runner();
+                        var Runner = new bad_each_way_finder_api_domain.DomainModel.RunnerInfo();
 
                         var mappedRunner = mappedExchangeWinMarketCatalogue.Runners
                             .FirstOrDefault(r => r.RunnerName == runner.selectionName);
 
                         if(mappedRunner == null)
                         {
-                            //log this
+                            _logger.LogWarning("NO_MAPPED_RUNNER; " +
+                                "Source=PropositionService; " +
+                                "Action=BuildRaces; " +
+                                $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                                $"EventName={mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"Name={runner.selectionName}; " +
+                                "Msg=No Mapped Runner present, cannot continue; ");
+
                             continue;
                         }
 
                         Runner.RunnerSelectionId = runner.selectionId;
                         Runner.RunnerName = runner.selectionName;
-                        Runner.WinRunnerOdds = runner.winRunnerOdds;
+
+                        if(runner.winRunnerOdds == null)
+                        {
+                            _logger.LogWarning($"RUNNER_ODDS_INVALID; " +
+                                $"Source=PropositionService; " +
+                                $"Action=BuildRaces; " +
+                                $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                                $"EventName={mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"Name={runner.selectionName}; " +
+                                $"Msg=No valid odds for runner, cannot continue; ");
+
+                            continue;
+                        }
+
+                        Runner.WinRunnerOddsDecimal = runner.winRunnerOdds.@decimal;
 
                         var mappedExchangeWinRunner = mappedExchangeWinMarketBook.Runners
                             .FirstOrDefault(r => r.SelectionId == mappedRunner.SelectionId);
 
                         if (mappedExchangeWinRunner == null)
                         {
-                            //log this
+                            _logger.LogWarning($"NO_MAPPED_EXCHANGE_WIN_RUNNER; " +
+                                $"Source=PropositionService; " +
+                                $"Action=BuildRaces; " +
+                                $"EventName{mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"RunnerName={runner.selectionName}; " +
+                                $"Msg=No Mapped Exchange Win Runner; ");
+
                             runnerList.Add(Runner);
                             continue;
                         }
                         if (mappedExchangeWinRunner.ExchangePrices == null)
                         {
-                            //log this
+                            _logger.LogWarning($"NO_EXCHANGE_PRICES; " +
+                                $"Source=PropositionService; " +
+                                $"Action=BuildRaces; " +
+                                $"EventName{mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"RunnerName={runner.selectionName}; " +
+                                $"Msg=No Mapped Exchange Win Runner Exchange Prices; ");
+
                             runnerList.Add(Runner);
                             continue;
                         }
                         if (!mappedExchangeWinRunner.ExchangePrices.AvailableToLay.Any())
                         {
-                            //log this
+                            _logger.LogWarning($"NO_LAY_PRICE_AVAILABLE; " +
+                                $"Source=PropositionService; " +
+                                $"Action=BuildRaces; " +
+                                $"EventName{mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"RunnerName={runner.selectionName}; " +
+                                $"Msg=No Lay price available in mapped exchange win runner; ");
+
                             runnerList.Add(Runner);
                             continue;
                         }
@@ -164,19 +255,43 @@ namespace bad_each_way_finder_api.Services
 
                         if (mappedExchangePlaceRunner == null)
                         {
-                            //log this
+                            _logger.LogWarning("NO_MAPPED_EXCHANGE_PLACE_RUNNER; " +
+                                "Source=PropositionService; " +
+                                "Action=BuildRaces; " +
+                                $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                                $"EventName={mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"Name={runner.selectionName}; " +
+                                "Msg=No Mapped Exchange Place Runner present, cannot continue; ");
+
                             runnerList.Add(Runner);
                             continue;
                         }
                         if (mappedExchangePlaceRunner.ExchangePrices == null)
                         {
-                            //log this
+                            _logger.LogWarning("NO_EXCHANGE_PRICES_AVAILABLE; " +
+                                "Source=PropositionService; " +
+                                "Action=BuildRaces; " +
+                                $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                                $"EventName={mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"Name={runner.selectionName}; " +
+                                "Msg=No Exchange Prices present in Mapped Exchange Place Runner, cannot continue; ");
+
                             runnerList.Add(Runner);
                             continue;
                         }
                         if (!mappedExchangePlaceRunner.ExchangePrices.AvailableToLay.Any())
                         {
-                            //log this
+                            _logger.LogWarning("NO_LAY_PRICES_AVAILABLE; " +
+                                "Source=PropositionService; " +
+                                "Action=BuildRaces; " +
+                                $"LinkedMarketId={sportsbookMarketDetail.linkedMarketId}; " +
+                                $"EventName={mappedEvent.Name}; " +
+                                $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
+                                $"Name={runner.selectionName}; " +
+                                "Msg=No Lay Prices present in Mapped Exchange Place Runner, cannot continue; ");
+
                             runnerList.Add(Runner);
                             continue;
                         }
@@ -220,6 +335,26 @@ namespace bad_each_way_finder_api.Services
                 Console.WriteLine(ex);
                 return races;
             }
+        }
+
+        public List<Proposition> DeterminePropositions(List<Race> races)
+        {
+            var result = new List<Proposition>();
+
+            foreach (var race in races)
+            {
+                foreach (var runner in race.Runners)
+                {
+                    if (runner.EachWayExpectedValue > 0)
+                    {
+                        var proposition = new Proposition(race, runner);
+
+                        result.Add(proposition);
+                        _propositionDatabaseService.AddProposition(proposition);
+                    }
+                }
+            }
+            return result;
         }
 
         private MarketDetails GetMarketDetails() 

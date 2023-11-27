@@ -1,3 +1,4 @@
+using bad_each_way_finder_api_domain.DomainModel;
 using bad_each_way_finder_api_domain.Exchange;
 using bad_each_way_finder_api_domain.Sportsbook;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +13,9 @@ public class BadEachWayFinderApiContext : IdentityDbContext<IdentityUser>
         : base(options)
     {
     }
+
+    //domain
+    public DbSet<Proposition> Propositions { get; set; }
 
     //common
     public DbSet<Competition> Competitions { get; set; }
@@ -35,6 +39,11 @@ public class BadEachWayFinderApiContext : IdentityDbContext<IdentityUser>
     {
         builder.Entity<MarketDescription>().Property(b => b.Id)
            .ValueGeneratedOnAdd();
+
+        builder.Entity<Proposition>()
+            .HasKey(nameof(Proposition.RunnerName), 
+                    nameof(Proposition.WinRunnerOddsDecimal),
+                    nameof(Proposition.EventId));
 
         base.OnModelCreating(builder);
     }

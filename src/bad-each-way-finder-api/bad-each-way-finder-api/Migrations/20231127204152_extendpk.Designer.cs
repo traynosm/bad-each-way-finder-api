@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bad_each_way_finder_api.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    partial class BadEachWayFinderApiContextModelSnapshot : ModelSnapshot
+    [Migration("20231127204152_extendpk")]
+    partial class extendpk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,6 +261,9 @@ namespace bad_each_way_finder_api.Migrations
 
                     b.Property<double>("ExchangeWinPrice")
                         .HasColumnType("float");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("PlaceExpectedValue")
                         .HasColumnType("float");
