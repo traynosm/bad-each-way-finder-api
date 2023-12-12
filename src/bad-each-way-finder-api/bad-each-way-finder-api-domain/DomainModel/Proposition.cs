@@ -22,7 +22,7 @@
         {
 
         }
-        public Proposition(Race race, RunnerInfo runner) : base(runner)
+        public Proposition(Race race, RunnerInfo runner) : base(runner, race)
         {
             EventId = race.EventId;
             EventName = race.EventName;

@@ -1,4 +1,5 @@
-﻿using bad_each_way_finder_api_domain.Sportsbook;
+﻿using bad_each_way_finder_api_domain.Extensions;
+using bad_each_way_finder_api_domain.Sportsbook;
 
 namespace bad_each_way_finder_api_domain.DomainModel
 {
@@ -12,19 +13,21 @@ namespace bad_each_way_finder_api_domain.DomainModel
 
         //sportbook properties
         public double WinRunnerOddsDecimal { get; set; }
+        public double EachWayPlacePart { get; set; }
         public double WinExpectedValue { get; set; }
         public double PlaceExpectedValue { get; set; }
         public double EachWayExpectedValue { get; set; }
 
         public RunnerInfo() { }
 
-        public RunnerInfo(RunnerInfo runner)
+        public RunnerInfo(RunnerInfo runner, Race race)
         {
             RunnerSelectionId = runner.RunnerSelectionId;
             RunnerName = runner.RunnerName;
             ExchangeWinPrice = runner.ExchangeWinPrice;
             ExchangePlacePrice = runner.ExchangePlacePrice;
             WinRunnerOddsDecimal = runner.WinRunnerOddsDecimal;
+            EachWayPlacePart = runner.WinRunnerOddsDecimal.EachWayPlacePart(race.SportsbookPlaceFractionDenominator);
             WinExpectedValue = runner.WinExpectedValue;
             PlaceExpectedValue = runner.PlaceExpectedValue;
             EachWayExpectedValue = runner.EachWayExpectedValue;

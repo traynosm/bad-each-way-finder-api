@@ -307,7 +307,9 @@ namespace bad_each_way_finder_api.Services
                         Runner.ExchangePlacePrice = exchangePlacePrice;
                         Runner.WinExpectedValue = winExpectedValue;
                         Runner.PlaceExpectedValue = placeExpectedValue;
-                        Runner.EachWayExpectedValue = eachWayExpectedValue; 
+                        Runner.EachWayExpectedValue = eachWayExpectedValue;
+                        Runner.EachWayPlacePart = runner.winRunnerOdds.@decimal
+                            .EachWayPlacePart(sportsbookMarketDetail.placeFractionDenominator);
 
                         runnerList.Add(Runner);
                     }

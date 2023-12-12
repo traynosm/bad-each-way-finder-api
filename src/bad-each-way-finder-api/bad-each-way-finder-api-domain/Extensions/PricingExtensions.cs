@@ -43,5 +43,14 @@ namespace bad_each_way_finder_api_domain.Extensions
                 .Sum(r => (1 / (((r.winRunnerOdds.@decimal - 1) / marketDetail.placeFractionDenominator) + 1))) * 100;
         }
 
+        public static double EachWayPlacePart(this double WinRunnerOdds, int EachWayFraction)
+        {
+            if(EachWayFraction > 0)
+            {
+                return ((WinRunnerOdds - 1) / (double)EachWayFraction) + 1;
+            }
+            return WinRunnerOdds;
+
+        }
     }
 }
