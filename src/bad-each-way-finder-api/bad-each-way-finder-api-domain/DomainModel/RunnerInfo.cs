@@ -8,8 +8,11 @@ namespace bad_each_way_finder_api_domain.DomainModel
         //exchange properties
         public long RunnerSelectionId { get; set; }
         public string RunnerName { get; set; }
-        public double ExchangeWinPrice{ get; set; }
+        public int RunnerOrder { get; set; }
+        public double ExchangeWinPrice { get; set; }
+        public double ExchangeWinSize { get; set; }
         public double ExchangePlacePrice { get; set; }
+        public double ExchangePlaceSize { get; set; }
 
         //sportbook properties
         public double WinRunnerOddsDecimal { get; set; }
@@ -24,8 +27,11 @@ namespace bad_each_way_finder_api_domain.DomainModel
         {
             RunnerSelectionId = runner.RunnerSelectionId;
             RunnerName = runner.RunnerName;
+            RunnerOrder = runner.RunnerOrder;
             ExchangeWinPrice = runner.ExchangeWinPrice;
+            ExchangeWinSize = runner.ExchangeWinSize;
             ExchangePlacePrice = runner.ExchangePlacePrice;
+            ExchangePlaceSize = runner.ExchangePlaceSize;
             WinRunnerOddsDecimal = runner.WinRunnerOddsDecimal;
             EachWayPlacePart = runner.WinRunnerOddsDecimal.EachWayPlacePart(race.SportsbookPlaceFractionDenominator);
             WinExpectedValue = runner.WinExpectedValue;

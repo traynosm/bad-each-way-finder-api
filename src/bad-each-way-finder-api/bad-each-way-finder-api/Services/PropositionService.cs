@@ -166,7 +166,7 @@ namespace bad_each_way_finder_api.Services
                     foreach (var runner in sportsbookMarketDetail.runnerDetails
                         .Where(r => r.runnerOrder < 50 && r.runnerStatus == "ACTIVE"))
                     {
-                        var Runner = new bad_each_way_finder_api_domain.DomainModel.RunnerInfo();
+                        var RunnerInfo = new bad_each_way_finder_api_domain.DomainModel.RunnerInfo();
 
                         var mappedRunner = mappedExchangeWinMarketCatalogue.Runners
                             .FirstOrDefault(r => r.RunnerName == runner.selectionName);
@@ -185,8 +185,9 @@ namespace bad_each_way_finder_api.Services
                             continue;
                         }
 
-                        Runner.RunnerSelectionId = runner.selectionId;
-                        Runner.RunnerName = runner.selectionName;
+                        RunnerInfo.RunnerSelectionId = runner.selectionId;
+                        RunnerInfo.RunnerName = runner.selectionName;
+                        RunnerInfo.RunnerOrder = runner.runnerOrder;
 
                         if(runner.winRunnerOdds == null)
                         {
@@ -202,7 +203,7 @@ namespace bad_each_way_finder_api.Services
                             continue;
                         }
 
-                        Runner.WinRunnerOddsDecimal = runner.winRunnerOdds.@decimal;
+                        RunnerInfo.WinRunnerOddsDecimal = runner.winRunnerOdds.@decimal;
 
                         var mappedExchangeWinRunner = mappedExchangeWinMarketBook.Runners
                             .FirstOrDefault(r => r.SelectionId == mappedRunner.SelectionId);
@@ -217,7 +218,7 @@ namespace bad_each_way_finder_api.Services
                                 $"RunnerName={runner.selectionName}; " +
                                 $"Msg=No Mapped Exchange Win Runner; ");
 
-                            runnerList.Add(Runner);
+                            runnerList.Add(RunnerInfo);
                             continue;
                         }
                         if (mappedExchangeWinRunner.ExchangePrices == null)
@@ -230,7 +231,7 @@ namespace bad_each_way_finder_api.Services
                                 $"RunnerName={runner.selectionName}; " +
                                 $"Msg=No Mapped Exchange Win Runner Exchange Prices; ");
 
-                            runnerList.Add(Runner);
+                            runnerList.Add(RunnerInfo);
                             continue;
                         }
                         if (!mappedExchangeWinRunner.ExchangePrices.AvailableToLay.Any())
@@ -243,10 +244,12 @@ namespace bad_each_way_finder_api.Services
                                 $"RunnerName={runner.selectionName}; " +
                                 $"Msg=No Lay price available in mapped exchange win runner; ");
 
-                            runnerList.Add(Runner);
+                            runnerList.Add(RunnerInfo);
                             continue;
                         }
                         var exchangeWinPrice = mappedExchangeWinRunner.ExchangePrices.AvailableToLay[0].Price;
+                        var exchangeWinSize = mappedExchangeWinRunner.ExchangePrices.AvailableToLay[0].Size;
+
 
                         var winExpectedValue = runner.winRunnerOdds.@decimal.ExpectedValue(exchangeWinPrice);
 
@@ -264,7 +267,7 @@ namespace bad_each_way_finder_api.Services
                                 $"Name={runner.selectionName}; " +
                                 "Msg=No Mapped Exchange Place Runner present, cannot continue; ");
 
-                            runnerList.Add(Runner);
+                            runnerList.Add(RunnerInfo);
                             continue;
                         }
                         if (mappedExchangePlaceRunner.ExchangePrices == null)
@@ -278,7 +281,7 @@ namespace bad_each_way_finder_api.Services
                                 $"Name={runner.selectionName}; " +
                                 "Msg=No Exchange Prices present in Mapped Exchange Place Runner, cannot continue; ");
 
-                            runnerList.Add(Runner);
+                            runnerList.Add(RunnerInfo);
                             continue;
                         }
                         if (!mappedExchangePlaceRunner.ExchangePrices.AvailableToLay.Any())
@@ -292,10 +295,12 @@ namespace bad_each_way_finder_api.Services
                                 $"Name={runner.selectionName}; " +
                                 "Msg=No Lay Prices present in Mapped Exchange Place Runner, cannot continue; ");
 
-                            runnerList.Add(Runner);
+                            runnerList.Add(RunnerInfo);
                             continue;
                         }
                         var exchangePlacePrice = mappedExchangePlaceRunner.ExchangePrices.AvailableToLay[0].Price;
+                        var exchangePlaceSize = mappedExchangePlaceRunner.ExchangePrices.AvailableToLay[0].Size;
+
 
                         var placeExpectedValue = runner.winRunnerOdds.@decimal
                             .PlacePart(sportsbookMarketDetail.placeFractionDenominator)
@@ -303,15 +308,17 @@ namespace bad_each_way_finder_api.Services
 
                         var eachWayExpectedValue = (winExpectedValue + placeExpectedValue) / 2;
 
-                        Runner.ExchangeWinPrice = exchangeWinPrice;
-                        Runner.ExchangePlacePrice = exchangePlacePrice;
-                        Runner.WinExpectedValue = winExpectedValue;
-                        Runner.PlaceExpectedValue = placeExpectedValue;
-                        Runner.EachWayExpectedValue = eachWayExpectedValue;
-                        Runner.EachWayPlacePart = runner.winRunnerOdds.@decimal
+                        RunnerInfo.ExchangeWinPrice = exchangeWinPrice;
+                        RunnerInfo.ExchangeWinSize = exchangeWinSize;
+                        RunnerInfo.ExchangePlacePrice = exchangePlacePrice;
+                        RunnerInfo.ExchangePlaceSize = exchangePlaceSize;
+                        RunnerInfo.WinExpectedValue = winExpectedValue;
+                        RunnerInfo.PlaceExpectedValue = placeExpectedValue;
+                        RunnerInfo.EachWayExpectedValue = eachWayExpectedValue;
+                        RunnerInfo.EachWayPlacePart = runner.winRunnerOdds.@decimal
                             .EachWayPlacePart(sportsbookMarketDetail.placeFractionDenominator);
 
-                        runnerList.Add(Runner);
+                        runnerList.Add(RunnerInfo);
                     }
 
                     var Race = new Race()
