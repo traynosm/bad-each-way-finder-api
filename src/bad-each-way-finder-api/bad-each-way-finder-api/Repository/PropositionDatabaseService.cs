@@ -27,5 +27,29 @@ namespace bad_each_way_finder_api.Repository
 
             _context.SaveChanges();
         }
+
+        public List<Proposition> GetTodaysSavedPropositions()
+        {
+            var savedPropositions = _context.Propositions
+                .Where(p => p.EventDateTime.Date == DateTime.Today)
+                .ToList();
+            return savedPropositions;
+        }
+
+        public Proposition GetSingleProposition(string runnerName, double winOdds, string eventId)
+        {
+            var proposition = _context.Propositions
+                .FirstOrDefault(p =>
+                p.RunnerName == runnerName &&
+                p.WinRunnerOddsDecimal == winOdds &&
+                p.EventId == eventId);
+
+            if (proposition == null)
+            {
+                return new Proposition();
+            }
+
+            return proposition;
+        }
     }
 }

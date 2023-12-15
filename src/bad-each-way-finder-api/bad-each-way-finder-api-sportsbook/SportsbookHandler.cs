@@ -67,7 +67,7 @@ namespace bad_each_way_finder_api_sportsbook
                         {
                             //From = DateTime.Today,
                             From = DateTime.Today,
-                            To = DateTime.Today.AddDays(1)
+                            To = DateTime.Today.AddDays(2)
                         };
                         break;
                 }

@@ -125,6 +125,8 @@ namespace bad_each_way_finder_api
             builder.Services.AddScoped<ISportsbookDatabaseService, SportsbookDatabaseService>();
             builder.Services.AddScoped<IPropositionDatabaseService, PropositionDatabaseService>();
             builder.Services.AddScoped<IPropositionService, PropositionService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IAccountDatabaseService, AccountDatabaseService>();
 
 
             builder.Services.Configure<ExchangeSettings>(o => 

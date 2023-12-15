@@ -1,6 +1,7 @@
 using bad_each_way_finder_api_domain.DomainModel;
 using bad_each_way_finder_api_domain.Exchange;
 using bad_each_way_finder_api_domain.Sportsbook;
+using bad_each_way_finder_domain.DomainModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ public class BadEachWayFinderApiContext : IdentityDbContext<IdentityUser>
     public DbSet<MarketDetail> MarketDetails { get; set; }
     public DbSet<RunnerDetail> RunnerDetails { get; set; }
     public DbSet<Rule4Deduction> Rule4Deductions { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)

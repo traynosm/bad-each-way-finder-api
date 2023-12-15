@@ -21,10 +21,12 @@ namespace bad_each_way_finder_api.Controllers
         {
             var races = _propositionService.BuildRaces();
             var propositions = _propositionService.DeterminePropositions(races);
+            var savedPropositions = _propositionService.GetTodaysSavedPropositions();
             var dto = new RacesAndPropositionsDTO()
             {
                 Races = races,
-                Propositions = propositions
+                Propositions = propositions,
+                SavedPropositions = savedPropositions
             };
             return Ok(dto);
         }

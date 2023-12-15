@@ -218,6 +218,10 @@ namespace bad_each_way_finder_api.Services
                                 $"RunnerName={runner.selectionName}; " +
                                 $"Msg=No Mapped Exchange Win Runner; ");
 
+                            RunnerInfo.EachWayExpectedValue = -100;
+                            RunnerInfo.WinExpectedValue = -100;
+                            RunnerInfo.PlaceExpectedValue = -100;
+
                             runnerList.Add(RunnerInfo);
                             continue;
                         }
@@ -231,6 +235,10 @@ namespace bad_each_way_finder_api.Services
                                 $"RunnerName={runner.selectionName}; " +
                                 $"Msg=No Mapped Exchange Win Runner Exchange Prices; ");
 
+                            RunnerInfo.EachWayExpectedValue = -100;
+                            RunnerInfo.WinExpectedValue = -100;
+                            RunnerInfo.PlaceExpectedValue = -100;
+
                             runnerList.Add(RunnerInfo);
                             continue;
                         }
@@ -243,6 +251,10 @@ namespace bad_each_way_finder_api.Services
                                 $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
                                 $"RunnerName={runner.selectionName}; " +
                                 $"Msg=No Lay price available in mapped exchange win runner; ");
+
+                            RunnerInfo.EachWayExpectedValue = -100;
+                            RunnerInfo.WinExpectedValue = -100;
+                            RunnerInfo.PlaceExpectedValue = -100;
 
                             runnerList.Add(RunnerInfo);
                             continue;
@@ -267,6 +279,9 @@ namespace bad_each_way_finder_api.Services
                                 $"Name={runner.selectionName}; " +
                                 "Msg=No Mapped Exchange Place Runner present, cannot continue; ");
 
+                            RunnerInfo.EachWayExpectedValue = -100;
+                            RunnerInfo.PlaceExpectedValue = -100;
+
                             runnerList.Add(RunnerInfo);
                             continue;
                         }
@@ -280,6 +295,9 @@ namespace bad_each_way_finder_api.Services
                                 $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
                                 $"Name={runner.selectionName}; " +
                                 "Msg=No Exchange Prices present in Mapped Exchange Place Runner, cannot continue; ");
+
+                            RunnerInfo.EachWayExpectedValue = -100;
+                            RunnerInfo.PlaceExpectedValue = -100;
 
                             runnerList.Add(RunnerInfo);
                             continue;
@@ -295,12 +313,14 @@ namespace bad_each_way_finder_api.Services
                                 $"Name={runner.selectionName}; " +
                                 "Msg=No Lay Prices present in Mapped Exchange Place Runner, cannot continue; ");
 
+                            RunnerInfo.EachWayExpectedValue = -100;
+                            RunnerInfo.PlaceExpectedValue = -100;
+
                             runnerList.Add(RunnerInfo);
                             continue;
                         }
                         var exchangePlacePrice = mappedExchangePlaceRunner.ExchangePrices.AvailableToLay[0].Price;
                         var exchangePlaceSize = mappedExchangePlaceRunner.ExchangePrices.AvailableToLay[0].Size;
-
 
                         var placeExpectedValue = runner.winRunnerOdds.@decimal
                             .PlacePart(sportsbookMarketDetail.placeFractionDenominator)
@@ -365,6 +385,13 @@ namespace bad_each_way_finder_api.Services
             }
             return result;
         }
+
+        public List<Proposition> GetTodaysSavedPropositions()
+        {
+            var result = _propositionDatabaseService.GetTodaysSavedPropositions();
+            return result;
+        }
+
 
         private MarketDetails GetMarketDetails() 
         {

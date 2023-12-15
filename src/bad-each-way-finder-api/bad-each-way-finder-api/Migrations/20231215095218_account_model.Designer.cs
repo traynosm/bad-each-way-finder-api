@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bad_each_way_finder_api.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    partial class BadEachWayFinderApiContextModelSnapshot : ModelSnapshot
+    [Migration("20231215095218_account_model")]
+    partial class account_model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -730,7 +733,7 @@ namespace bad_each_way_finder_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IdenityUserName")
+                    b.Property<string>("IdenityUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -798,7 +801,7 @@ namespace bad_each_way_finder_api.Migrations
             modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.Proposition", b =>
                 {
                     b.HasOne("bad_each_way_finder_domain.DomainModel.Account", null)
-                        .WithMany("AccountPropositions")
+                        .WithMany("SavedPropositions")
                         .HasForeignKey("AccountId");
                 });
 
@@ -891,7 +894,7 @@ namespace bad_each_way_finder_api.Migrations
 
             modelBuilder.Entity("bad_each_way_finder_domain.DomainModel.Account", b =>
                 {
-                    b.Navigation("AccountPropositions");
+                    b.Navigation("SavedPropositions");
                 });
 #pragma warning restore 612, 618
         }
