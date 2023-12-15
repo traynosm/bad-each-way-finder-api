@@ -37,8 +37,8 @@ namespace bad_each_way_finder_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetSportsbookEventByEventTypes")]
-        public IActionResult GetSportsbookEventByEventTypes()
+        [Route("GetSportsbookEventsByEventType")]
+        public IActionResult GetSportsbookEventsByEventType()
         {
             var loginSuccess = _sportsbookHandler.TryLogin();
 

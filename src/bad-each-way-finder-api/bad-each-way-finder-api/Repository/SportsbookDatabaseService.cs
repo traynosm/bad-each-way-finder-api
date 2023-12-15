@@ -15,10 +15,10 @@ namespace bad_each_way_finder_api.Repository
 
         public void AddOrUpdateMarketDetails(MarketDetails marketDetails, bool clearData = true) 
         {
-            if (clearData && _context.MarketDetails.Any(m => m.marketStartTime.Date == DateTime.Today))
-            {
-                DeleteContent();
-            }
+            //if (clearData && _context.MarketDetails.Any(m => m.marketStartTime.Date == DateTime.Today))
+            //{
+            //    DeleteContent();
+            //}
 
             foreach (var marketDetail in marketDetails.marketDetails)
             {

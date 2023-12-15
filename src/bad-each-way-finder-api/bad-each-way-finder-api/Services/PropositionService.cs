@@ -354,7 +354,7 @@ namespace bad_each_way_finder_api.Services
             {
                 foreach (var runner in race.Runners)
                 {
-                    if (runner.EachWayExpectedValue > 0)
+                    if (runner.EachWayExpectedValue > -0.04)
                     {
                         var proposition = new Proposition(race, runner);
 

@@ -65,8 +65,9 @@ namespace bad_each_way_finder_api_sportsbook
                     case "7":
                         time = new TimeRange()
                         {
+                            //From = DateTime.Today,
                             From = DateTime.Today,
-                            To = DateTime.Today.AddDays(2)
+                            To = DateTime.Today.AddDays(1)
                         };
                         break;
                 }
