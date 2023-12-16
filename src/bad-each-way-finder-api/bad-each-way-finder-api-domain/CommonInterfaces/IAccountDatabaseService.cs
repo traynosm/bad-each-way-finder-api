@@ -7,5 +7,6 @@ namespace bad_each_way_finder_api_domain.CommonInterfaces
         Account GetOrAddAccount(string IdentityUserName);
 
         void AddAccountProposition(Account account);
+        void UpdateAccountPropositions(Account account);
     }
 }

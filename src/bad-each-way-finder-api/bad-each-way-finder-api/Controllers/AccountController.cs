@@ -34,6 +34,20 @@ namespace bad_each_way_finder_api.Controllers
             return Ok(accountPropositions);
         }
 
+        [HttpPost]
+        [Route("RemoveAccountProposition")]
+        public IActionResult RemoveAccountProposition(SavedPropositionDto savedPropositionDto)
+        {
+            if (savedPropositionDto == null)
+            {
+                return BadRequest("");
+            }
+
+            var accountPropositions = _accountService.DeleteAndGetAccountPropositions(savedPropositionDto);
+
+            return Ok(accountPropositions);
+        }
+
 
     }
 }

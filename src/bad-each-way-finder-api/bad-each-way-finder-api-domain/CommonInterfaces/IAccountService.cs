@@ -7,5 +7,6 @@ namespace bad_each_way_finder_api_domain.CommonInterfaces
     {
         List<Proposition> GetAccountPropositions(string userName);
         List<Proposition> SaveAndGetAccountPropositions(SavedPropositionDto savedPropositionDto);
+        List<Proposition> DeleteAndGetAccountPropositions(SavedPropositionDto savedPropositionDto);
     }
 }

@@ -44,5 +44,12 @@ namespace bad_each_way_finder_api.Repository
 
             _context.SaveChanges();    
         }
+
+        public void UpdateAccountPropositions(Account account)
+        {
+            _context.Entry(account).CurrentValues.SetValues(account);
+
+            _context.SaveChanges();
+        }
     }
 }
