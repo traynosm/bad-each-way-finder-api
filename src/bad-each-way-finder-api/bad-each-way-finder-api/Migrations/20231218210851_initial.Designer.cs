@@ -12,8 +12,8 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    [Migration("20231127204152_extendpk")]
-    partial class extendpk
+    [Migration("20231218210851_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -238,7 +238,13 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<string>("EventId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<double>("EachWayExpectedValue")
+                        .HasColumnType("float");
+
+                    b.Property<double>("EachWayPlacePart")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("EventDateTime")
@@ -255,6 +261,9 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<double>("ExchangePlacePrice")
                         .HasColumnType("float");
 
+                    b.Property<double>("ExchangePlaceSize")
+                        .HasColumnType("float");
+
                     b.Property<string>("ExchangeWinMarketId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -262,14 +271,23 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<double>("ExchangeWinPrice")
                         .HasColumnType("float");
 
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("ExchangeWinSize")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PlaceBsp")
+                        .HasColumnType("float");
 
                     b.Property<double>("PlaceExpectedValue")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("RecordedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("Rule4Deduction")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RunnerOrder")
+                        .HasColumnType("int");
 
                     b.Property<long>("RunnerSelectionId")
                         .HasColumnType("bigint");
@@ -287,12 +305,122 @@ namespace bad_each_way_finder_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("WinBsp")
+                        .HasColumnType("float");
+
                     b.Property<double>("WinExpectedValue")
                         .HasColumnType("float");
 
+                    b.Property<int>("WinRunnerOddsDenominator")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WinRunnerOddsNumerator")
+                        .HasColumnType("int");
+
                     b.HasKey("RunnerName", "WinRunnerOddsDecimal", "EventId");
 
+                    b.HasIndex("AccountId");
+
                     b.ToTable("Propositions");
+                });
+
+            modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.Race", b =>
+                {
+                    b.Property<string>("SportsbookWinMarketId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EventDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EventId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EventName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExchangePlaceMarketId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExchangeWinMarketId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PlaceOverRound")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("SportsbookEachwayAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SportsbookNumberOfPlaces")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SportsbookPlaceFractionDenominator")
+                        .HasColumnType("int");
+
+                    b.Property<double>("WinOverRound")
+                        .HasColumnType("float");
+
+                    b.HasKey("SportsbookWinMarketId");
+
+                    b.ToTable("Races");
+                });
+
+            modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.RunnerInfo", b =>
+                {
+                    b.Property<long>("RunnerSelectionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("EachWayExpectedValue")
+                        .HasColumnType("float");
+
+                    b.Property<double>("EachWayPlacePart")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ExchangePlacePrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ExchangePlaceSize")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ExchangeWinPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ExchangeWinSize")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PlaceExpectedValue")
+                        .HasColumnType("float");
+
+                    b.Property<string>("RaceSportsbookWinMarketId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RunnerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RunnerOrder")
+                        .HasColumnType("int");
+
+                    b.Property<double>("WinExpectedValue")
+                        .HasColumnType("float");
+
+                    b.Property<double>("WinRunnerOddsDecimal")
+                        .HasColumnType("float");
+
+                    b.Property<int>("WinRunnerOddsDenominator")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WinRunnerOddsNumerator")
+                        .HasColumnType("int");
+
+                    b.HasKey("RunnerSelectionId");
+
+                    b.HasIndex("RaceSportsbookWinMarketId");
+
+                    b.ToTable("RunnerInfos");
                 });
 
             modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.Competition", b =>
@@ -702,6 +830,28 @@ namespace bad_each_way_finder_api.Migrations
                     b.ToTable("RunnerDetails");
                 });
 
+            modelBuilder.Entity("bad_each_way_finder_domain.DomainModel.Account", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("IdenityUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("Accounts");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -751,6 +901,20 @@ namespace bad_each_way_finder_api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.Proposition", b =>
+                {
+                    b.HasOne("bad_each_way_finder_domain.DomainModel.Account", null)
+                        .WithMany("AccountPropositions")
+                        .HasForeignKey("AccountId");
+                });
+
+            modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.RunnerInfo", b =>
+                {
+                    b.HasOne("bad_each_way_finder_api_domain.DomainModel.Race", null)
+                        .WithMany("Runners")
+                        .HasForeignKey("RaceSportsbookWinMarketId");
                 });
 
             modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.MarketCatalogue", b =>
@@ -814,6 +978,20 @@ namespace bad_each_way_finder_api.Migrations
                         .HasForeignKey("MarketDetailmarketId");
                 });
 
+            modelBuilder.Entity("bad_each_way_finder_domain.DomainModel.Account", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
+
+                    b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.Race", b =>
+                {
+                    b.Navigation("Runners");
+                });
+
             modelBuilder.Entity("bad_each_way_finder_api_domain.Exchange.MarketBook", b =>
                 {
                     b.Navigation("Runners");
@@ -829,6 +1007,11 @@ namespace bad_each_way_finder_api.Migrations
                     b.Navigation("rule4Deductions");
 
                     b.Navigation("runnerDetails");
+                });
+
+            modelBuilder.Entity("bad_each_way_finder_domain.DomainModel.Account", b =>
+                {
+                    b.Navigation("AccountPropositions");
                 });
 #pragma warning restore 612, 618
         }

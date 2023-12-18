@@ -91,6 +91,32 @@ namespace bad_each_way_finder_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MarketBooks",
+                columns: table => new
+                {
+                    MarketId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsMarketDataDelayed = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    BetDelay = table.Column<int>(type: "int", nullable: false),
+                    IsBspReconciled = table.Column<bool>(type: "bit", nullable: false),
+                    IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    IsInplay = table.Column<bool>(type: "bit", nullable: false),
+                    NumberOfWinners = table.Column<int>(type: "int", nullable: false),
+                    NumberOfRunners = table.Column<int>(type: "int", nullable: false),
+                    NumberOfActiveRunners = table.Column<int>(type: "int", nullable: false),
+                    LastMatchTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TotalMatched = table.Column<double>(type: "float", nullable: false),
+                    TotalAvailable = table.Column<double>(type: "float", nullable: false),
+                    IsCrossMatching = table.Column<bool>(type: "bit", nullable: false),
+                    IsRunnersVoidable = table.Column<bool>(type: "bit", nullable: false),
+                    Version = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MarketBooks", x => x.MarketId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MarketDescriptions",
                 columns: table => new
                 {
@@ -142,6 +168,42 @@ namespace bad_each_way_finder_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Races",
+                columns: table => new
+                {
+                    SportsbookWinMarketId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SportsbookEachwayAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    SportsbookNumberOfPlaces = table.Column<int>(type: "int", nullable: false),
+                    SportsbookPlaceFractionDenominator = table.Column<int>(type: "int", nullable: false),
+                    WinOverRound = table.Column<double>(type: "float", nullable: false),
+                    PlaceOverRound = table.Column<double>(type: "float", nullable: false),
+                    EventId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExchangeWinMarketId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExchangePlaceMarketId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Races", x => x.SportsbookWinMarketId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StartingPrices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NearPrice = table.Column<double>(type: "float", nullable: false),
+                    FarPrice = table.Column<double>(type: "float", nullable: false),
+                    ActualSP = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StartingPrices", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -160,6 +222,25 @@ namespace bad_each_way_finder_api.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdentityUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdenityUserName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Accounts_AspNetUsers_IdentityUserId",
+                        column: x => x.IdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -328,6 +409,108 @@ namespace bad_each_way_finder_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RunnerInfos",
+                columns: table => new
+                {
+                    RunnerSelectionId = table.Column<long>(type: "bigint", nullable: false),
+                    RunnerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RunnerOrder = table.Column<int>(type: "int", nullable: false),
+                    ExchangeWinPrice = table.Column<double>(type: "float", nullable: false),
+                    ExchangeWinSize = table.Column<double>(type: "float", nullable: false),
+                    ExchangePlacePrice = table.Column<double>(type: "float", nullable: false),
+                    ExchangePlaceSize = table.Column<double>(type: "float", nullable: false),
+                    WinRunnerOddsDecimal = table.Column<double>(type: "float", nullable: false),
+                    WinRunnerOddsNumerator = table.Column<int>(type: "int", nullable: false),
+                    WinRunnerOddsDenominator = table.Column<int>(type: "int", nullable: false),
+                    EachWayPlacePart = table.Column<double>(type: "float", nullable: false),
+                    WinExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    PlaceExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    EachWayExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    RaceSportsbookWinMarketId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RunnerInfos", x => x.RunnerSelectionId);
+                    table.ForeignKey(
+                        name: "FK_RunnerInfos_Races_RaceSportsbookWinMarketId",
+                        column: x => x.RaceSportsbookWinMarketId,
+                        principalTable: "Races",
+                        principalColumn: "SportsbookWinMarketId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Runners",
+                columns: table => new
+                {
+                    SelectionId = table.Column<long>(type: "bigint", nullable: false),
+                    Handicap = table.Column<double>(type: "float", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    AdjustmentFactor = table.Column<double>(type: "float", nullable: true),
+                    LastPriceTraded = table.Column<double>(type: "float", nullable: true),
+                    TotalMatched = table.Column<double>(type: "float", nullable: false),
+                    RemovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartingPricesId = table.Column<int>(type: "int", nullable: true),
+                    MarketBookMarketId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Runners", x => x.SelectionId);
+                    table.ForeignKey(
+                        name: "FK_Runners_MarketBooks_MarketBookMarketId",
+                        column: x => x.MarketBookMarketId,
+                        principalTable: "MarketBooks",
+                        principalColumn: "MarketId");
+                    table.ForeignKey(
+                        name: "FK_Runners_StartingPrices_StartingPricesId",
+                        column: x => x.StartingPricesId,
+                        principalTable: "StartingPrices",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Propositions",
+                columns: table => new
+                {
+                    EventId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RunnerName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    WinRunnerOddsDecimal = table.Column<double>(type: "float", nullable: false),
+                    EventName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RecordedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExchangeWinMarketId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExchangePlaceMarketId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SportsbookWinMarketId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SportsbookEachwayAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    SportsbookNumberOfPlaces = table.Column<int>(type: "int", nullable: false),
+                    SportsbookPlaceFractionDenominator = table.Column<int>(type: "int", nullable: false),
+                    Rule4Deduction = table.Column<double>(type: "float", nullable: false),
+                    WinBsp = table.Column<double>(type: "float", nullable: false),
+                    PlaceBsp = table.Column<double>(type: "float", nullable: false),
+                    RunnerSelectionId = table.Column<long>(type: "bigint", nullable: false),
+                    RunnerOrder = table.Column<int>(type: "int", nullable: false),
+                    ExchangeWinPrice = table.Column<double>(type: "float", nullable: false),
+                    ExchangeWinSize = table.Column<double>(type: "float", nullable: false),
+                    ExchangePlacePrice = table.Column<double>(type: "float", nullable: false),
+                    ExchangePlaceSize = table.Column<double>(type: "float", nullable: false),
+                    WinRunnerOddsNumerator = table.Column<int>(type: "int", nullable: false),
+                    WinRunnerOddsDenominator = table.Column<int>(type: "int", nullable: false),
+                    EachWayPlacePart = table.Column<double>(type: "float", nullable: false),
+                    WinExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    PlaceExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    EachWayExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Propositions", x => new { x.RunnerName, x.WinRunnerOddsDecimal, x.EventId });
+                    table.ForeignKey(
+                        name: "FK_Propositions_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RunnerDescriptions",
                 columns: table => new
                 {
@@ -346,6 +529,11 @@ namespace bad_each_way_finder_api.Migrations
                         principalTable: "MarketCatalogues",
                         principalColumn: "MarketId");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_IdentityUserId",
+                table: "Accounts",
+                column: "IdentityUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -407,6 +595,11 @@ namespace bad_each_way_finder_api.Migrations
                 column: "EventTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Propositions_AccountId",
+                table: "Propositions",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rule4Deductions_MarketDetailmarketId",
                 table: "Rule4Deductions",
                 column: "MarketDetailmarketId");
@@ -420,6 +613,21 @@ namespace bad_each_way_finder_api.Migrations
                 name: "IX_RunnerDetails_MarketDetailmarketId",
                 table: "RunnerDetails",
                 column: "MarketDetailmarketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RunnerInfos_RaceSportsbookWinMarketId",
+                table: "RunnerInfos",
+                column: "RaceSportsbookWinMarketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Runners_MarketBookMarketId",
+                table: "Runners",
+                column: "MarketBookMarketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Runners_StartingPricesId",
+                table: "Runners",
+                column: "StartingPricesId");
         }
 
         /// <inheritdoc />
@@ -441,6 +649,9 @@ namespace bad_each_way_finder_api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Propositions");
+
+            migrationBuilder.DropTable(
                 name: "Rule4Deductions");
 
             migrationBuilder.DropTable(
@@ -450,16 +661,34 @@ namespace bad_each_way_finder_api.Migrations
                 name: "RunnerDetails");
 
             migrationBuilder.DropTable(
+                name: "RunnerInfos");
+
+            migrationBuilder.DropTable(
+                name: "Runners");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "MarketCatalogues");
 
             migrationBuilder.DropTable(
                 name: "MarketDetails");
+
+            migrationBuilder.DropTable(
+                name: "Races");
+
+            migrationBuilder.DropTable(
+                name: "MarketBooks");
+
+            migrationBuilder.DropTable(
+                name: "StartingPrices");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Competitions");

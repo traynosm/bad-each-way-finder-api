@@ -17,6 +17,8 @@ public class BadEachWayFinderApiContext : IdentityDbContext<IdentityUser>
 
     //domain
     public DbSet<Proposition> Propositions { get; set; }
+    public DbSet<Race> Races { get; set; }
+    public DbSet<RunnerInfo> RunnerInfos { get; set; }
 
     //common
     public DbSet<Competition> Competitions { get; set; }

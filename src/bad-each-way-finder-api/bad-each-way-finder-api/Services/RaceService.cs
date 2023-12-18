@@ -8,21 +8,23 @@ using bad_each_way_finder_api_sportsbook.Interfaces;
 
 namespace bad_each_way_finder_api.Services
 {
-    public class PropositionService : IPropositionService
+    public class RaceService : IRaceService
     {
         private readonly IExchangeHandler _exchangeHandler;
         private readonly ISportsbookHandler _sportsbookHandler;
-        private readonly ILogger<PropositionService> _logger;
+        private readonly ILogger<RaceService> _logger;
         private readonly IPropositionDatabaseService _propositionDatabaseService;
+        private readonly IRaceDatabaseService _raceDatabaseService;
 
-        public PropositionService(IExchangeHandler exchangeHandler, ISportsbookHandler sportsbookHandler,
-            ILogger<PropositionService> logger, IPropositionDatabaseService propositionDatabaseService)
+        public RaceService(IExchangeHandler exchangeHandler, ISportsbookHandler sportsbookHandler,
+            ILogger<RaceService> logger, IPropositionDatabaseService propositionDatabaseService,
+            IRaceDatabaseService raceDatabaseService)
         {
             _exchangeHandler = exchangeHandler;
             _sportsbookHandler = sportsbookHandler;
             _logger = logger;
             _propositionDatabaseService = propositionDatabaseService;
-
+            _raceDatabaseService = raceDatabaseService;
         }
 
         public List<Race> BuildRaces()
@@ -188,6 +190,7 @@ namespace bad_each_way_finder_api.Services
                         RunnerInfo.RunnerSelectionId = runner.selectionId;
                         RunnerInfo.RunnerName = runner.selectionName;
                         RunnerInfo.RunnerOrder = runner.runnerOrder;
+                        RunnerInfo.RunnerStatus = runner.runnerStatus;
 
                         if(runner.winRunnerOdds == null)
                         {
@@ -204,6 +207,8 @@ namespace bad_each_way_finder_api.Services
                         }
 
                         RunnerInfo.WinRunnerOddsDecimal = runner.winRunnerOdds.@decimal;
+                        RunnerInfo.WinRunnerOddsNumerator = runner.winRunnerOdds.numerator;
+                        RunnerInfo.WinRunnerOddsDenominator = runner.winRunnerOdds.denominator;
 
                         var mappedExchangeWinRunner = mappedExchangeWinMarketBook.Runners
                             .FirstOrDefault(r => r.SelectionId == mappedRunner.SelectionId);
@@ -352,8 +357,11 @@ namespace bad_each_way_finder_api.Services
                         SportsbookEachwayAvailable = sportsbookMarketDetail.eachwayAvailable,
                         SportsbookNumberOfPlaces = sportsbookMarketDetail.numberOfPlaces,
                         SportsbookPlaceFractionDenominator = sportsbookMarketDetail.placeFractionDenominator,
+                        LastUpdated = DateTime.UtcNow,
                         Runners = runnerList,
                     };
+
+                    _raceDatabaseService.AddOrUpdateRace(Race);
 
                     races.Add(Race);
                 }

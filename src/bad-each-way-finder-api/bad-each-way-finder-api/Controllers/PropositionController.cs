@@ -9,9 +9,9 @@ namespace bad_each_way_finder_api.Controllers
     [ApiController]
     public class PropositionController : ControllerBase
     {
-        private readonly IPropositionService _propositionService;
+        private readonly IRaceService _propositionService;
 
-        public PropositionController(IPropositionService propositionService)
+        public PropositionController(IRaceService propositionService)
         {
             _propositionService = propositionService;   
         }
