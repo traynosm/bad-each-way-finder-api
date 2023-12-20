@@ -17,8 +17,22 @@ namespace bad_each_way_finder_api.Repository
         public void AddOrUpdateRace(Race race)
         {
             var existingRace = _context.Races
-                .Include(r => r.Runners)
                 .FirstOrDefault(r => r.SportsbookWinMarketId == race.SportsbookWinMarketId);
+
+            foreach(var runnerInfo in race.Runners) 
+            {
+                var existingRunnerInfo = _context.RunnerInfos
+                   .FirstOrDefault(r => r.RunnerSelectionId == runnerInfo.RunnerSelectionId);
+
+                if(existingRunnerInfo == null)
+                {
+                    _context.RunnerInfos.Add(runnerInfo);
+                }
+                else
+                {
+                    _context.Entry(existingRunnerInfo).CurrentValues.SetValues(runnerInfo);
+                }
+            }
 
             if (existingRace == null)
             {
@@ -30,6 +44,18 @@ namespace bad_each_way_finder_api.Repository
             }
 
             _context.SaveChanges();
+        }
+
+        public RunnerInfo GetRunnerInfo(string id)
+        {
+            var runnerInfo = _context.RunnerInfos.FirstOrDefault(r => r.Id == id);
+
+            if (runnerInfo == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return runnerInfo;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace bad_each_way_finder_api_domain.DomainModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
+        public string Id { get; set; }
         public long RunnerSelectionId { get; set; }
         public string RunnerName { get; set; }
         public int RunnerOrder { get; set; }
@@ -34,6 +35,7 @@ namespace bad_each_way_finder_api_domain.DomainModel
 
         public RunnerInfo(RunnerInfo runner, Race race)
         {
+            Id = $"{race.EventId}{runner.RunnerSelectionId}"; //have to make this unique to the race
             RunnerSelectionId = runner.RunnerSelectionId;
             RunnerName = runner.RunnerName;
             RunnerOrder = runner.RunnerOrder;

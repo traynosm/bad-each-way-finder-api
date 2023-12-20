@@ -180,6 +180,7 @@ namespace bad_each_way_finder_api.Migrations
                     EventId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EventName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EventDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExchangeWinMarketId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExchangePlaceMarketId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -412,6 +413,7 @@ namespace bad_each_way_finder_api.Migrations
                 name: "RunnerInfos",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RunnerSelectionId = table.Column<long>(type: "bigint", nullable: false),
                     RunnerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RunnerOrder = table.Column<int>(type: "int", nullable: false),
@@ -426,11 +428,12 @@ namespace bad_each_way_finder_api.Migrations
                     WinExpectedValue = table.Column<double>(type: "float", nullable: false),
                     PlaceExpectedValue = table.Column<double>(type: "float", nullable: false),
                     EachWayExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    RunnerStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RaceSportsbookWinMarketId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RunnerInfos", x => x.RunnerSelectionId);
+                    table.PrimaryKey("PK_RunnerInfos", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RunnerInfos_Races_RaceSportsbookWinMarketId",
                         column: x => x.RaceSportsbookWinMarketId,
@@ -498,6 +501,9 @@ namespace bad_each_way_finder_api.Migrations
                     WinExpectedValue = table.Column<double>(type: "float", nullable: false),
                     PlaceExpectedValue = table.Column<double>(type: "float", nullable: false),
                     EachWayExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    RunnerStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LatestWinPrice = table.Column<double>(type: "float", nullable: false),
+                    LatestPlacePrice = table.Column<double>(type: "float", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

@@ -46,6 +46,8 @@ namespace bad_each_way_finder_api_domain.DomainModel
 
         public double LatestWinPrice { get; set; }
         public double LatestPlacePrice { get; set; }
+        public double LatestWinExpectedValue { get; set; }
+        public double LatestEachWayExpectedValue { get; set; }
 
         public Proposition()
         {
@@ -79,7 +81,6 @@ namespace bad_each_way_finder_api_domain.DomainModel
             PlaceExpectedValue = runner.PlaceExpectedValue;
             EachWayExpectedValue = runner.EachWayExpectedValue;
             RunnerStatus = runner.RunnerStatus;
-
         }
     }
 }

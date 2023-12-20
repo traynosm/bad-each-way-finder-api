@@ -1,6 +1,7 @@
 ﻿using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_domain.DomainModel;
 using bad_each_way_finder_api_domain.DTO;
+using bad_each_way_finder_api_domain.Extensions;
 
 namespace bad_each_way_finder_api.Services
 {
@@ -9,18 +10,35 @@ namespace bad_each_way_finder_api.Services
         private readonly ILogger<AccountService> _logger;
         private readonly IAccountDatabaseService _accountDatabaseService;
         private readonly IPropositionDatabaseService _propositionDatabaseService;
+        private readonly IRaceDatabaseService _raceDatabaseService;
 
         public AccountService(ILogger<AccountService> logger, IAccountDatabaseService accountDatabaseService, 
-            IPropositionDatabaseService propositionDatabaseService)
+            IPropositionDatabaseService propositionDatabaseService, IRaceDatabaseService raceDatabaseService)
         {
             _logger = logger;
             _accountDatabaseService = accountDatabaseService;
             _propositionDatabaseService = propositionDatabaseService;
+            _raceDatabaseService = raceDatabaseService;
         }
 
         public List<Proposition> GetAccountPropositions(string userName)
         {
             var account = _accountDatabaseService.GetOrAddAccount(userName);
+
+            var todaysAccount = account.AccountPropositions.Where(p => p.EventDateTime.Date == DateTime.Today).ToList();
+
+            foreach (var proposition in todaysAccount)
+            {
+                var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
+
+                proposition.LatestWinPrice = runnerInfo.ExchangeWinPrice;
+                proposition.LatestPlacePrice = runnerInfo.ExchangePlacePrice;
+                proposition.LatestWinExpectedValue = proposition.WinRunnerOddsDecimal.ExpectedValue(proposition.LatestWinPrice);
+
+                var placeExpectedValue = proposition.EachWayPlacePart.ExpectedValue(proposition.LatestPlacePrice);
+
+                proposition.LatestEachWayExpectedValue = (proposition.LatestWinExpectedValue + placeExpectedValue) / 2;
+            }
 
             return account.AccountPropositions;
         }
@@ -69,5 +87,4 @@ namespace bad_each_way_finder_api.Services
             return account.AccountPropositions;
         }
     }
-
 }

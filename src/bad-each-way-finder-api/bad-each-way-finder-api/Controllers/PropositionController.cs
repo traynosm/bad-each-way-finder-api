@@ -9,19 +9,19 @@ namespace bad_each_way_finder_api.Controllers
     [ApiController]
     public class PropositionController : ControllerBase
     {
-        private readonly IRaceService _propositionService;
+        private readonly IRaceService _raceService;
 
-        public PropositionController(IRaceService propositionService)
+        public PropositionController(IRaceService raceService)
         {
-            _propositionService = propositionService;   
+            _raceService = raceService;   
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var races = _propositionService.BuildRaces();
-            var propositions = _propositionService.DeterminePropositions(races);
-            var savedPropositions = _propositionService.GetTodaysSavedPropositions();
+            var races = await _raceService.BuildRaces();
+            var propositions = _raceService.DeterminePropositions(races);
+            var savedPropositions = _raceService.GetTodaysSavedPropositions();
             var dto = new RacesAndPropositionsDTO()
             {
                 Races = races,

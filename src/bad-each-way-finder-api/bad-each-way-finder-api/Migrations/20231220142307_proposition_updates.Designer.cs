@@ -12,8 +12,8 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    [Migration("20231218212432_add_latest_prices_propositon")]
-    partial class add_latest_prices_propositon
+    [Migration("20231220142307_proposition_updates")]
+    partial class proposition_updates
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -274,7 +274,13 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<double>("ExchangeWinSize")
                         .HasColumnType("float");
 
+                    b.Property<double>("LatestEachWayExpectedValue")
+                        .HasColumnType("float");
+
                     b.Property<double>("LatestPlacePrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("LatestWinExpectedValue")
                         .HasColumnType("float");
 
                     b.Property<double>("LatestWinPrice")
@@ -383,8 +389,8 @@ namespace bad_each_way_finder_api.Migrations
 
             modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.RunnerInfo", b =>
                 {
-                    b.Property<long>("RunnerSelectionId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("EachWayExpectedValue")
                         .HasColumnType("float");
@@ -417,6 +423,9 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<int>("RunnerOrder")
                         .HasColumnType("int");
 
+                    b.Property<long>("RunnerSelectionId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("RunnerStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -433,7 +442,7 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<int>("WinRunnerOddsNumerator")
                         .HasColumnType("int");
 
-                    b.HasKey("RunnerSelectionId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RaceSportsbookWinMarketId");
 

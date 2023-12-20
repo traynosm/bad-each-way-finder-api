@@ -33,6 +33,7 @@ namespace bad_each_way_finder_api.Repository
             var savedPropositions = _context.Propositions
                 .Where(p => p.EventDateTime.Date == DateTime.Today)
                 .ToList();
+
             return savedPropositions;
         }
 

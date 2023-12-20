@@ -1,10 +1,12 @@
-﻿using bad_each_way_finder_api_domain.CommonInterfaces;
+﻿using Azure.Core.GeoJson;
+using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_domain.DomainModel;
 using bad_each_way_finder_api_domain.Exchange;
 using bad_each_way_finder_api_domain.Extensions;
 using bad_each_way_finder_api_domain.Sportsbook;
 using bad_each_way_finder_api_exchange.Interfaces;
 using bad_each_way_finder_api_sportsbook.Interfaces;
+using System.Text;
 
 namespace bad_each_way_finder_api.Services
 {
@@ -27,7 +29,7 @@ namespace bad_each_way_finder_api.Services
             _raceDatabaseService = raceDatabaseService;
         }
 
-        public List<Race> BuildRaces()
+        public async Task<List<Race>> BuildRaces()
         {
             var races = new List<Race>();
 
@@ -163,12 +165,12 @@ namespace bad_each_way_finder_api.Services
 
                         continue;
                     }
-                    var runnerList = new List<bad_each_way_finder_api_domain.DomainModel.RunnerInfo>();
+                    var runnerList = new List<RunnerInfo>();
 
                     foreach (var runner in sportsbookMarketDetail.runnerDetails
                         .Where(r => r.runnerOrder < 50 && r.runnerStatus == "ACTIVE"))
                     {
-                        var RunnerInfo = new bad_each_way_finder_api_domain.DomainModel.RunnerInfo();
+                        var RunnerInfo = new RunnerInfo();
 
                         var mappedRunner = mappedExchangeWinMarketCatalogue.Runners
                             .FirstOrDefault(r => r.RunnerName == runner.selectionName);
@@ -187,6 +189,7 @@ namespace bad_each_way_finder_api.Services
                             continue;
                         }
 
+                        RunnerInfo.Id = $"{mappedEvent.Id}{runner.selectionId}";
                         RunnerInfo.RunnerSelectionId = runner.selectionId;
                         RunnerInfo.RunnerName = runner.selectionName;
                         RunnerInfo.RunnerOrder = runner.runnerOrder;
@@ -396,11 +399,22 @@ namespace bad_each_way_finder_api.Services
 
         public List<Proposition> GetTodaysSavedPropositions()
         {
-            var result = _propositionDatabaseService.GetTodaysSavedPropositions();
-            return result;
+            var propositions = _propositionDatabaseService.GetTodaysSavedPropositions();
+
+            foreach (var proposition in propositions)
+            {
+                var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
+
+                proposition.LatestWinPrice = runnerInfo.ExchangeWinPrice;
+                proposition.LatestPlacePrice = runnerInfo.ExchangePlacePrice;
+                proposition.LatestWinExpectedValue = proposition.WinRunnerOddsDecimal.ExpectedValue(proposition.LatestWinPrice);
+
+                var placeExpectedValue = proposition.EachWayPlacePart.ExpectedValue(proposition.LatestPlacePrice);
+
+                proposition.LatestEachWayExpectedValue = (proposition.LatestWinExpectedValue + placeExpectedValue)/2;
+            }
+            return propositions;
         }
-
-
         private MarketDetails GetMarketDetails() 
         {
             var loginSuccess = _sportsbookHandler.TryLogin();

@@ -3,6 +3,7 @@ using bad_each_way_finder_api.Configuration;
 using bad_each_way_finder_api.Repository;
 using bad_each_way_finder_api.Services;
 using bad_each_way_finder_api.Settings;
+using bad_each_way_finder_api.Workers;
 using bad_each_way_finder_api_auth.Settings;
 using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_exchange.Settings;
@@ -121,15 +122,17 @@ namespace bad_each_way_finder_api
             builder.Services.ConfigureExchange();
             builder.Services.ConfigureSportsbook();
 
-            builder.Services.AddScoped<IExchangeDatabaseService, ExchangeDatabaseService>();
-            builder.Services.AddScoped<ISportsbookDatabaseService, SportsbookDatabaseService>();
-            builder.Services.AddScoped<IPropositionDatabaseService, PropositionDatabaseService>();
             builder.Services.AddScoped<IRaceService, RaceService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+
+            builder.Services.AddScoped<IExchangeDatabaseService, ExchangeDatabaseService>();
+            builder.Services.AddScoped<ISportsbookDatabaseService, SportsbookDatabaseService>();
             builder.Services.AddScoped<IAccountDatabaseService, AccountDatabaseService>();
+            builder.Services.AddScoped<IPropositionDatabaseService, PropositionDatabaseService>();
             builder.Services.AddScoped<IRaceDatabaseService, RaceDatabaseService>();
 
-
+            builder.Services.AddScoped<IScopedRacingWorker, ScopedRacingWorker>();
+            builder.Services.AddHostedService<RacingWorker>();
 
             builder.Services.Configure<ExchangeSettings>(o => 
             configuration.GetSection("ExchangeSettings")
@@ -146,6 +149,11 @@ namespace bad_each_way_finder_api
             builder.Services.Configure<IdentitySettings>(o =>
             configuration.GetSection("IdentitySettings")
                 .Bind(o));
+
+            builder.Services.Configure<RaceWorkerSettings>(o =>
+            configuration.GetSection("RaceWorkerSettings")
+                .Bind(o));
+
 
             var app = builder.Build();
 

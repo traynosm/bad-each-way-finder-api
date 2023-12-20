@@ -12,7 +12,7 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    [Migration("20231218210851_initial")]
+    [Migration("20231219213216_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -274,6 +274,12 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<double>("ExchangeWinSize")
                         .HasColumnType("float");
 
+                    b.Property<double>("LatestPlacePrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("LatestWinPrice")
+                        .HasColumnType("float");
+
                     b.Property<double>("PlaceBsp")
                         .HasColumnType("float");
 
@@ -291,6 +297,10 @@ namespace bad_each_way_finder_api.Migrations
 
                     b.Property<long>("RunnerSelectionId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("RunnerStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("SportsbookEachwayAvailable")
                         .HasColumnType("bit");
@@ -348,6 +358,9 @@ namespace bad_each_way_finder_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<double>("PlaceOverRound")
                         .HasColumnType("float");
 
@@ -370,8 +383,8 @@ namespace bad_each_way_finder_api.Migrations
 
             modelBuilder.Entity("bad_each_way_finder_api_domain.DomainModel.RunnerInfo", b =>
                 {
-                    b.Property<long>("RunnerSelectionId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("EachWayExpectedValue")
                         .HasColumnType("float");
@@ -404,6 +417,13 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<int>("RunnerOrder")
                         .HasColumnType("int");
 
+                    b.Property<long>("RunnerSelectionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RunnerStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("WinExpectedValue")
                         .HasColumnType("float");
 
@@ -416,7 +436,7 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<int>("WinRunnerOddsNumerator")
                         .HasColumnType("int");
 
-                    b.HasKey("RunnerSelectionId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RaceSportsbookWinMarketId");
 
