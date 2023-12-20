@@ -25,7 +25,9 @@ namespace bad_each_way_finder_api.Services
         {
             var account = _accountDatabaseService.GetOrAddAccount(userName);
 
-            var todaysAccount = account.AccountPropositions.Where(p => p.EventDateTime.Date == DateTime.Today).ToList();
+            var todaysAccount = account.AccountPropositions
+                .Where(p => p.EventDateTime.Date == DateTime.Today.AddDays(1))
+                .ToList();
 
             foreach (var proposition in todaysAccount)
             {

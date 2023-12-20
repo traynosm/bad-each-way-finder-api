@@ -31,7 +31,7 @@ namespace bad_each_way_finder_api.Repository
         public List<Proposition> GetTodaysSavedPropositions()
         {
             var savedPropositions = _context.Propositions
-                .Where(p => p.EventDateTime.Date == DateTime.Today)
+                .Where(p => p.EventDateTime.Date == DateTime.Today.AddDays(1))
                 .ToList();
 
             return savedPropositions;

@@ -44,6 +44,7 @@ namespace bad_each_way_finder_api_domain.DomainModel
         public double EachWayExpectedValue { get; set; }
         public string RunnerStatus { get; set; }
 
+        //latest properties
         public double LatestWinPrice { get; set; }
         public double LatestPlacePrice { get; set; }
         public double LatestWinExpectedValue { get; set; }

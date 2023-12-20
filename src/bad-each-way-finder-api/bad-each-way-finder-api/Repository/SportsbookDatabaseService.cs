@@ -69,8 +69,21 @@ namespace bad_each_way_finder_api.Repository
                     _context.MarketDetails.Add(marketDetail);
                 }
             }
-
             _context.SaveChanges();
+        }
+
+        public List<Rule4Deduction> RaceRule4Deductions(string marketId)
+        {
+            var race = _context.MarketDetails
+                .Include(r => r.rule4Deductions)
+                .FirstOrDefault(r => r.marketId == marketId);
+
+            if(race == null) 
+            {
+                throw new NullReferenceException();
+            }
+
+            return race.rule4Deductions;
         }
 
         private void DeleteContent()

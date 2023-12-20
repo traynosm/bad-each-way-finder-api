@@ -504,6 +504,8 @@ namespace bad_each_way_finder_api.Migrations
                     RunnerStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LatestWinPrice = table.Column<double>(type: "float", nullable: false),
                     LatestPlacePrice = table.Column<double>(type: "float", nullable: false),
+                    LatestWinExpectedValue = table.Column<double>(type: "float", nullable: false),
+                    LatestEachWayExpectedValue = table.Column<double>(type: "float", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

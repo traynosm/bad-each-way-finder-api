@@ -17,16 +17,18 @@ namespace bad_each_way_finder_api.Services
         private readonly ILogger<RaceService> _logger;
         private readonly IPropositionDatabaseService _propositionDatabaseService;
         private readonly IRaceDatabaseService _raceDatabaseService;
+        private readonly ISportsbookDatabaseService _sportsbookDatabaseService;
 
         public RaceService(IExchangeHandler exchangeHandler, ISportsbookHandler sportsbookHandler,
             ILogger<RaceService> logger, IPropositionDatabaseService propositionDatabaseService,
-            IRaceDatabaseService raceDatabaseService)
+            IRaceDatabaseService raceDatabaseService, ISportsbookDatabaseService sportsbookDatabaseService)
         {
             _exchangeHandler = exchangeHandler;
             _sportsbookHandler = sportsbookHandler;
             _logger = logger;
             _propositionDatabaseService = propositionDatabaseService;
             _raceDatabaseService = raceDatabaseService;
+            _sportsbookDatabaseService = sportsbookDatabaseService;
         }
 
         public async Task<List<Race>> BuildRaces()
@@ -383,15 +385,30 @@ namespace bad_each_way_finder_api.Services
 
             foreach (var race in races)
             {
-                foreach (var runner in race.Runners)
-                {
-                    if (runner.EachWayExpectedValue > -0.04)
+                try 
+                { 
+                    foreach (var runner in race.Runners)
                     {
-                        var proposition = new Proposition(race, runner);
+                        try
+                        {
+                            if (runner.EachWayExpectedValue > -0.04)
+                            {
+                                var proposition = new Proposition(race, runner);
 
-                        result.Add(proposition);
-                        _propositionDatabaseService.AddProposition(proposition);
+                                result.Add(proposition);
+                                _propositionDatabaseService.AddProposition(proposition);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("");
+                        }
                     }
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine("");
                 }
             }
             return result;
@@ -400,10 +417,23 @@ namespace bad_each_way_finder_api.Services
         public List<Proposition> GetTodaysSavedPropositions()
         {
             var propositions = _propositionDatabaseService.GetTodaysSavedPropositions();
-
+            
             foreach (var proposition in propositions)
             {
                 var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
+                var raceRule4Deductions = _sportsbookDatabaseService.RaceRule4Deductions(proposition.SportsbookWinMarketId);
+
+                if(raceRule4Deductions.Any())
+                {
+                    foreach(var deduction in raceRule4Deductions)
+                    {
+                        if(proposition.RecordedAt >= deduction.timeFrom && proposition.RecordedAt <= deduction.timeTo)
+                        {
+                            proposition.Rule4Deduction = deduction.deduction;
+                            break;
+                        }
+                    }
+                }
 
                 proposition.LatestWinPrice = runnerInfo.ExchangeWinPrice;
                 proposition.LatestPlacePrice = runnerInfo.ExchangePlacePrice;
@@ -426,6 +456,9 @@ namespace bad_each_way_finder_api.Services
                     e => e.Id).ToHashSet());
                 var result = _sportsbookHandler.ListPrices(eId.Select(
                     e => e.MarketId).ToList());
+
+                _sportsbookDatabaseService.AddOrUpdateMarketDetails(result);
+
                 return result;
             }
             else

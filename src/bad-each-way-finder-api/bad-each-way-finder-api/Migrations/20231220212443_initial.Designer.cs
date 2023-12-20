@@ -12,7 +12,7 @@ using bad_each_way_finder_api.Areas.Identity.Data;
 namespace bad_each_way_finder_api.Migrations
 {
     [DbContext(typeof(BadEachWayFinderApiContext))]
-    [Migration("20231219213216_initial")]
+    [Migration("20231220212443_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -274,7 +274,13 @@ namespace bad_each_way_finder_api.Migrations
                     b.Property<double>("ExchangeWinSize")
                         .HasColumnType("float");
 
+                    b.Property<double>("LatestEachWayExpectedValue")
+                        .HasColumnType("float");
+
                     b.Property<double>("LatestPlacePrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("LatestWinExpectedValue")
                         .HasColumnType("float");
 
                     b.Property<double>("LatestWinPrice")

@@ -5,5 +5,6 @@ namespace bad_each_way_finder_api_domain.CommonInterfaces
     public interface ISportsbookDatabaseService
     {
         void AddOrUpdateMarketDetails(MarketDetails marketDetails, bool clearData = true);
+        List<Rule4Deduction> RaceRule4Deductions(string marketId);
     }
 }

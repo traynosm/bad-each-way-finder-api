@@ -1,5 +1,4 @@
-﻿using bad_each_way_finder_api_domain.Exchange;
-using bad_each_way_finder_api_domain.Extensions;
+﻿using bad_each_way_finder_api_domain.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
