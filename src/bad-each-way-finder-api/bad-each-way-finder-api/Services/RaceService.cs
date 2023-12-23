@@ -102,6 +102,11 @@ namespace bad_each_way_finder_api.Services
 
                     var mappedEvent = mappedExchangeWinMarketCatalogue.Event;
 
+                    if(mappedEvent.Venue == "Southwell")
+                    {
+                        Console.WriteLine("");
+                    }
+
                     if (mappedEvent == null)
                     {
                         _logger.LogWarning("NO_MAPPED_EVENT; " +
@@ -155,6 +160,7 @@ namespace bad_each_way_finder_api.Services
                     var mappedExchangePlaceMartketBook = raceExhangePlaceMarketBooks
                         .FirstOrDefault(m => m.NumberOfWinners == sportsbookMarketDetail.numberOfPlaces);
 
+                    var mappedExchangePlaceMarketId = "0";
                     if (mappedExchangePlaceMartketBook == null)
                     {
                         _logger.LogWarning("NO_MAPPED_EXCHANGE_PLACE_MARKET_BOOK; " +
@@ -165,8 +171,13 @@ namespace bad_each_way_finder_api.Services
                             $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
                             "Msg=No Mapped Exchange Place Market Book present, cannot continue; ");
 
-                        continue;
+                        //continue;
                     }
+                    else
+                    {
+                        mappedExchangePlaceMarketId = mappedExchangePlaceMartketBook.MarketId;
+                    }
+
                     var runnerList = new List<RunnerInfo>();
 
                     foreach (var runner in sportsbookMarketDetail.runnerDetails
@@ -272,10 +283,13 @@ namespace bad_each_way_finder_api.Services
                         var exchangeWinPrice = mappedExchangeWinRunner.ExchangePrices.AvailableToLay[0].Price;
                         var exchangeWinSize = mappedExchangeWinRunner.ExchangePrices.AvailableToLay[0].Size;
 
-
                         var winExpectedValue = runner.winRunnerOdds.@decimal.ExpectedValue(exchangeWinPrice);
 
-                        var mappedExchangePlaceRunner = mappedExchangePlaceMartketBook.Runners
+                        RunnerInfo.ExchangeWinPrice = exchangeWinPrice;
+                        RunnerInfo.ExchangeWinSize = exchangeWinSize;
+                        RunnerInfo.WinExpectedValue = winExpectedValue;
+
+                        var mappedExchangePlaceRunner = mappedExchangePlaceMartketBook?.Runners
                             .FirstOrDefault(r => r.SelectionId == runner.selectionId);
 
                         if (mappedExchangePlaceRunner == null)
@@ -329,6 +343,7 @@ namespace bad_each_way_finder_api.Services
                             runnerList.Add(RunnerInfo);
                             continue;
                         }
+
                         var exchangePlacePrice = mappedExchangePlaceRunner.ExchangePrices.AvailableToLay[0].Price;
                         var exchangePlaceSize = mappedExchangePlaceRunner.ExchangePrices.AvailableToLay[0].Size;
 
@@ -338,11 +353,8 @@ namespace bad_each_way_finder_api.Services
 
                         var eachWayExpectedValue = (winExpectedValue + placeExpectedValue) / 2;
 
-                        RunnerInfo.ExchangeWinPrice = exchangeWinPrice;
-                        RunnerInfo.ExchangeWinSize = exchangeWinSize;
                         RunnerInfo.ExchangePlacePrice = exchangePlacePrice;
                         RunnerInfo.ExchangePlaceSize = exchangePlaceSize;
-                        RunnerInfo.WinExpectedValue = winExpectedValue;
                         RunnerInfo.PlaceExpectedValue = placeExpectedValue;
                         RunnerInfo.EachWayExpectedValue = eachWayExpectedValue;
                         RunnerInfo.EachWayPlacePart = runner.winRunnerOdds.@decimal
@@ -357,7 +369,7 @@ namespace bad_each_way_finder_api.Services
                         EventName = mappedEvent.Name,
                         EventDateTime = sportsbookMarketDetail.marketStartTime,
                         ExchangeWinMarketId = mappedExchangeWinMarketBook.MarketId,
-                        ExchangePlaceMarketId = mappedExchangePlaceMartketBook.MarketId,
+                        ExchangePlaceMarketId = mappedExchangePlaceMarketId,
                         SportsbookWinMarketId = sportsbookMarketDetail.marketId,
                         SportsbookEachwayAvailable = sportsbookMarketDetail.eachwayAvailable,
                         SportsbookNumberOfPlaces = sportsbookMarketDetail.numberOfPlaces,
@@ -379,7 +391,7 @@ namespace bad_each_way_finder_api.Services
             }
         }
 
-        public List<Proposition> DeterminePropositions(List<Race> races)
+        public List<Proposition> DetermineLivePropositions(List<Race> races)
         {
             var result = new List<Proposition>();
 
@@ -391,7 +403,7 @@ namespace bad_each_way_finder_api.Services
                     {
                         try
                         {
-                            if (runner.EachWayExpectedValue > -0.04)
+                            if (runner.EachWayExpectedValue >= -0.01)
                             {
                                 var proposition = new Proposition(race, runner);
 
@@ -416,9 +428,9 @@ namespace bad_each_way_finder_api.Services
 
         public List<Proposition> GetTodaysSavedPropositions()
         {
-            var propositions = _propositionDatabaseService.GetTodaysSavedPropositions();
+            var todaysSavedPropositions = _propositionDatabaseService.GetTodaysSavedPropositions();
             
-            foreach (var proposition in propositions)
+            foreach (var proposition in todaysSavedPropositions)
             {
                 var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
                 var raceRule4Deductions = _sportsbookDatabaseService.RaceRule4Deductions(proposition.SportsbookWinMarketId);
@@ -437,13 +449,25 @@ namespace bad_each_way_finder_api.Services
 
                 proposition.LatestWinPrice = runnerInfo.ExchangeWinPrice;
                 proposition.LatestPlacePrice = runnerInfo.ExchangePlacePrice;
-                proposition.LatestWinExpectedValue = proposition.WinRunnerOddsDecimal.ExpectedValue(proposition.LatestWinPrice);
 
-                var placeExpectedValue = proposition.EachWayPlacePart.ExpectedValue(proposition.LatestPlacePrice);
+                if(runnerInfo.ExchangeWinPrice > 0)
+                {
+                    proposition.LatestWinExpectedValue = proposition.WinRunnerOddsDecimal.ExpectedValue(
+                        proposition.LatestWinPrice);
 
-                proposition.LatestEachWayExpectedValue = (proposition.LatestWinExpectedValue + placeExpectedValue)/2;
+                }
+
+                if(runnerInfo.ExchangePlacePrice > 0)
+                {
+                    var placeExpectedValue = proposition.EachWayPlacePart.ExpectedValue(proposition.LatestPlacePrice);
+
+                    proposition.LatestEachWayExpectedValue = (proposition.LatestWinExpectedValue + placeExpectedValue) / 2;
+                }
+
+                //Update Latest values to proposition
+                _propositionDatabaseService.AddProposition(proposition);
             }
-            return propositions;
+            return todaysSavedPropositions;
         }
         private MarketDetails GetMarketDetails() 
         {

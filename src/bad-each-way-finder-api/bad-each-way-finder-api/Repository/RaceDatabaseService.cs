@@ -22,7 +22,7 @@ namespace bad_each_way_finder_api.Repository
             foreach(var runnerInfo in race.Runners) 
             {
                 var existingRunnerInfo = _context.RunnerInfos
-                   .FirstOrDefault(r => r.RunnerSelectionId == runnerInfo.RunnerSelectionId);
+                   .FirstOrDefault(r => r.Id == $"{race.EventId}{runnerInfo.RunnerSelectionId}");
 
                 if(existingRunnerInfo == null)
                 {

@@ -20,12 +20,12 @@ namespace bad_each_way_finder_api.Controllers
         public async Task<IActionResult> Get()
         {
             var races = await _raceService.BuildRaces();
-            var propositions = _raceService.DeterminePropositions(races);
+            var livePropositions = _raceService.DetermineLivePropositions(races);
             var savedPropositions = _raceService.GetTodaysSavedPropositions();
             var dto = new RacesAndPropositionsDTO()
             {
                 Races = races,
-                Propositions = propositions,
+                LivePropositions = livePropositions,
                 SavedPropositions = savedPropositions
             };
             return Ok(dto);

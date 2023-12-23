@@ -13,17 +13,19 @@ namespace bad_each_way_finder_api.Repository
 
         public void AddProposition(Proposition proposition)
         {
-            var propositionExists = _context.Propositions.Any(p => 
+            var savedProposition = _context.Propositions.FirstOrDefault(p => 
                 p.WinRunnerOddsDecimal == proposition.WinRunnerOddsDecimal && 
                 p.RunnerName == proposition.RunnerName &&
                 p.EventId == proposition.EventId);
 
-            if (propositionExists)
+            if (savedProposition == null)
             {
-                return;
+                _context.Propositions.Add(proposition);
             }
-
-            _context.Propositions.Add(proposition);
+            else
+            {
+                _context.Entry(savedProposition).CurrentValues.SetValues(proposition);
+            }
 
             _context.SaveChanges();
         }
@@ -31,7 +33,7 @@ namespace bad_each_way_finder_api.Repository
         public List<Proposition> GetTodaysSavedPropositions()
         {
             var savedPropositions = _context.Propositions
-                .Where(p => p.EventDateTime.Date == DateTime.Today.AddDays(1))
+                .Where(p => p.EventDateTime.Date == DateTime.Today.AddDays(0))
                 .ToList();
 
             return savedPropositions;
