@@ -54,7 +54,7 @@ namespace bad_each_way_finder_api.Services
             return account.AccountPropositions;
         }
 
-        public List<Proposition> SaveAndGetAccountPropositions(SavedPropositionDto savedPropositionDto)
+        public List<Proposition> SaveAndGetAccountPropositions(RaisedPropositionDto savedPropositionDto)
         {
             var account = _accountDatabaseService.GetOrAddAccount(savedPropositionDto.IdentityUserName);
 
@@ -79,7 +79,7 @@ namespace bad_each_way_finder_api.Services
             return account.AccountPropositions;
         }
 
-        public List<Proposition> DeleteAndGetAccountPropositions(SavedPropositionDto savedPropositionDto)
+        public List<Proposition> DeleteAndGetAccountPropositions(RaisedPropositionDto savedPropositionDto)
         {
             var account = _accountDatabaseService.GetOrAddAccount(savedPropositionDto.IdentityUserName);
 

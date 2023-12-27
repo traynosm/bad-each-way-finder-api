@@ -1,4 +1,5 @@
 ﻿using bad_each_way_finder_api_domain.Enums;
+using bad_each_way_finder_api_domain.Exchange;
 
 namespace bad_each_way_finder_api_domain.Extensions
 {
@@ -51,6 +52,23 @@ namespace bad_each_way_finder_api_domain.Extensions
             }
 
             return new HashSet<string>();
+        }
+
+        public static TimeRange RacingQueryTimeRange()
+        {
+            if(DateTime.Now.Hour < 17)
+            {
+                return new TimeRange()
+                {
+                    From = DateTime.Today,
+                    To = DateTime.Today.AddDays(1)
+                };
+            }
+            return new TimeRange()
+            {
+                From = DateTime.Today,
+                To = DateTime.Today.AddDays(2)
+            }; ;
         }
 
     }

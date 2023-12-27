@@ -58,12 +58,7 @@ namespace bad_each_way_finder_api_exchange
 
             if (timeRange == null)
             {
-                time = new TimeRange()
-                {
-                    //From = DateTime.Now,
-                    From = DateTime.Today,
-                    To = DateTime.Today.AddDays(1)
-                };
+                time = BetFairQueryExtensions.RacingQueryTimeRange();
             }
             else
             {
@@ -96,11 +91,7 @@ namespace bad_each_way_finder_api_exchange
 
             if (timeRange == null)
             {
-                //time.From = DateTime.Now;
-                time.From = DateTime.Today;
-                time.To = DateTime.Today.AddDays(2);
-                //time.To = DateTime.Today.AddDays(1);
-
+                time = BetFairQueryExtensions.RacingQueryTimeRange();
             }
             else
             {

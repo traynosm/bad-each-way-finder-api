@@ -1,6 +1,4 @@
 ﻿using bad_each_way_finder_api_domain.CommonInterfaces;
-using bad_each_way_finder_api_exchange;
-using bad_each_way_finder_api_exchange.Interfaces;
 using bad_each_way_finder_api_sportsbook.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

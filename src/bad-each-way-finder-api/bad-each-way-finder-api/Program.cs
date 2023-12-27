@@ -154,7 +154,6 @@ namespace bad_each_way_finder_api
             configuration.GetSection("RaceWorkerSettings")
                 .Bind(o));
 
-
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

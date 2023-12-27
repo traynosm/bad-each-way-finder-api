@@ -1,6 +1,7 @@
 ﻿using bad_each_way_finder_api.Areas.Identity.Data;
 using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_domain.DomainModel;
+using bad_each_way_finder_api_domain.Exchange;
 
 namespace bad_each_way_finder_api.Repository
 {
@@ -13,30 +14,31 @@ namespace bad_each_way_finder_api.Repository
 
         public void AddProposition(Proposition proposition)
         {
-            var savedProposition = _context.Propositions.FirstOrDefault(p => 
+            var raisedProposition = _context.Propositions.FirstOrDefault(p => 
                 p.WinRunnerOddsDecimal == proposition.WinRunnerOddsDecimal && 
                 p.RunnerName == proposition.RunnerName &&
                 p.EventId == proposition.EventId);
 
-            if (savedProposition == null)
+            if (raisedProposition == null)
             {
                 _context.Propositions.Add(proposition);
             }
             else
             {
-                _context.Entry(savedProposition).CurrentValues.SetValues(proposition);
+                _context.Entry(raisedProposition).CurrentValues.SetValues(proposition);
             }
 
             _context.SaveChanges();
         }
 
-        public List<Proposition> GetTodaysSavedPropositions()
+        public List<Proposition> GetRaisedPropositionsForTimeRange(TimeRange timeRange)
         {
-            var savedPropositions = _context.Propositions
-                .Where(p => p.EventDateTime.Date == DateTime.Today.AddDays(0))
+            var raisedPropositions = _context.Propositions
+                .Where(p => p.EventDateTime.Date >= timeRange.From && 
+                            p.EventDateTime.Date <= timeRange.To)
                 .ToList();
 
-            return savedPropositions;
+            return raisedPropositions;
         }
 
         public Proposition GetSingleProposition(string runnerName, double winOdds, string eventId)

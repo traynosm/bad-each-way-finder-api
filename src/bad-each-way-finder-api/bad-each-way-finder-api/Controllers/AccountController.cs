@@ -21,29 +21,29 @@ namespace bad_each_way_finder_api.Controllers
         }
 
         [HttpPost]
-        [Route("PostSaveProposition")]
-        public IActionResult PostSaveProposition(SavedPropositionDto savedPropositionDto)
+        [Route("PostRaisedProposition")]
+        public IActionResult PostRaisedProposition(RaisedPropositionDto raisedPropositionDto)
         {
-            if (savedPropositionDto == null)
+            if (raisedPropositionDto == null)
             {
                 return BadRequest("");
             }
 
-            var accountPropositions = _accountService.SaveAndGetAccountPropositions(savedPropositionDto);
+            var accountPropositions = _accountService.SaveAndGetAccountPropositions(raisedPropositionDto);
 
             return Ok(accountPropositions);
         }
 
         [HttpPost]
         [Route("RemoveAccountProposition")]
-        public IActionResult RemoveAccountProposition(SavedPropositionDto savedPropositionDto)
+        public IActionResult RemoveAccountProposition(RaisedPropositionDto raisedPropositionDto)
         {
-            if (savedPropositionDto == null)
+            if (raisedPropositionDto == null)
             {
                 return BadRequest("");
             }
 
-            var accountPropositions = _accountService.DeleteAndGetAccountPropositions(savedPropositionDto);
+            var accountPropositions = _accountService.DeleteAndGetAccountPropositions(raisedPropositionDto);
 
             return Ok(accountPropositions);
         }

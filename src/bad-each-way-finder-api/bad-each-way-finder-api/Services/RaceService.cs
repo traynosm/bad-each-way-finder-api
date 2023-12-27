@@ -1,12 +1,10 @@
-﻿using Azure.Core.GeoJson;
-using bad_each_way_finder_api_domain.CommonInterfaces;
+﻿using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_domain.DomainModel;
 using bad_each_way_finder_api_domain.Exchange;
 using bad_each_way_finder_api_domain.Extensions;
 using bad_each_way_finder_api_domain.Sportsbook;
 using bad_each_way_finder_api_exchange.Interfaces;
 using bad_each_way_finder_api_sportsbook.Interfaces;
-using System.Text;
 
 namespace bad_each_way_finder_api.Services
 {
@@ -426,14 +424,18 @@ namespace bad_each_way_finder_api.Services
             return result;
         }
 
-        public List<Proposition> GetTodaysSavedPropositions()
+        public List<Proposition> GetRaisedPropositionsForTimeRange(TimeRange timeRange)
         {
-            var todaysSavedPropositions = _propositionDatabaseService.GetTodaysSavedPropositions();
+            var todaysSavedPropositions = _propositionDatabaseService.GetRaisedPropositionsForTimeRange(timeRange);
             
             foreach (var proposition in todaysSavedPropositions)
             {
                 var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
                 var raceRule4Deductions = _sportsbookDatabaseService.RaceRule4Deductions(proposition.SportsbookWinMarketId);
+
+                proposition.FinalAdjustedOddsDecimal = proposition.WinRunnerOddsDecimal;
+                //raceRule4Deductions.Add(new Rule4Deduction() 
+                //{ deduction = 10, timeFrom = DateTime.Now.AddDays(-7), timeTo = DateTime.Now.AddDays(7) });
 
                 if(raceRule4Deductions.Any())
                 {
@@ -442,6 +444,7 @@ namespace bad_each_way_finder_api.Services
                         if(proposition.RecordedAt >= deduction.timeFrom && proposition.RecordedAt <= deduction.timeTo)
                         {
                             proposition.Rule4Deduction = deduction.deduction;
+                            proposition.FinalAdjustedOddsDecimal = ((proposition.WinRunnerOddsDecimal - 1) * ((100 - proposition.Rule4Deduction) / 100)) + 1;
                             break;
                         }
                     }

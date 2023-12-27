@@ -63,12 +63,7 @@ namespace bad_each_way_finder_api_sportsbook
                 switch (eventTypeId)
                 {
                     case "7":
-                        time = new TimeRange()
-                        {
-                            //From = DateTime.Today,
-                            From = DateTime.Today,
-                            To = DateTime.Today.AddDays(2)
-                        };
+                        time = BetFairQueryExtensions.RacingQueryTimeRange();
                         break;
                 }
             }

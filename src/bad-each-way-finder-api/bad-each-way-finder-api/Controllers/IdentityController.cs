@@ -2,7 +2,6 @@
 using bad_each_way_finder_api.Settings;
 using bad_each_way_finder_api_domain.DTO;
 using bad_each_way_finder_api_domain.Identity;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
