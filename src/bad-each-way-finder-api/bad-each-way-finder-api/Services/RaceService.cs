@@ -430,12 +430,13 @@ namespace bad_each_way_finder_api.Services
             
             foreach (var proposition in todaysSavedPropositions)
             {
+                var race = _raceDatabaseService.GetRace(proposition.SportsbookWinMarketId);
                 var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
                 var raceRule4Deductions = _sportsbookDatabaseService.RaceRule4Deductions(proposition.SportsbookWinMarketId);
 
                 proposition.FinalAdjustedOddsDecimal = proposition.WinRunnerOddsDecimal;
-                //raceRule4Deductions.Add(new Rule4Deduction() 
-                //{ deduction = 10, timeFrom = DateTime.Now.AddDays(-7), timeTo = DateTime.Now.AddDays(7) });
+                proposition.SportsbookNumberOfPlaces = race.SportsbookNumberOfPlaces;
+                proposition.SportsbookPlaceFractionDenominator = race.SportsbookPlaceFractionDenominator;
 
                 if(raceRule4Deductions.Any())
                 {

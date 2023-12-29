@@ -43,9 +43,18 @@ namespace bad_each_way_finder_api
             builder.Services.AddDbContext<BadEachWayFinderApiContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-                options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<BadEachWayFinderApiContext>();
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<BadEachWayFinderApiContext>()
+                .AddDefaultTokenProviders();
+
 
             builder.Services.AddAuthentication(opt =>
             {
@@ -155,6 +164,14 @@ namespace bad_each_way_finder_api
                 .Bind(o));
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<BadEachWayFinderApiContext>();
+                context.Database.EnsureCreated();
+                SeedData.Initialize(services);
+            }
 
             if (app.Environment.IsDevelopment())
             {

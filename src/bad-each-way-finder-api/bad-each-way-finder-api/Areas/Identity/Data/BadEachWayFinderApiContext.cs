@@ -38,7 +38,6 @@ public class BadEachWayFinderApiContext : IdentityDbContext<IdentityUser>
     public DbSet<Rule4Deduction> Rule4Deductions { get; set; }
     public DbSet<Account> Accounts { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<MarketDescription>().Property(b => b.Id)

@@ -46,6 +46,18 @@ namespace bad_each_way_finder_api.Repository
             _context.SaveChanges();
         }
 
+        public Race GetRace(string id)
+        {
+            var race = _context.Races.FirstOrDefault(r => r.SportsbookWinMarketId.Equals(id));
+
+            if (race == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return race;
+        }
+
         public RunnerInfo GetRunnerInfo(string id)
         {
             var runnerInfo = _context.RunnerInfos.FirstOrDefault(r => r.Id == id);

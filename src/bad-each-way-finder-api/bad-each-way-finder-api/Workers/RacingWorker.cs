@@ -1,5 +1,7 @@
-﻿using bad_each_way_finder_api.Settings;
+﻿using bad_each_way_finder_api.Areas.Identity.Data;
+using bad_each_way_finder_api.Settings;
 using bad_each_way_finder_api_domain.CommonInterfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace bad_each_way_finder_api.Workers
