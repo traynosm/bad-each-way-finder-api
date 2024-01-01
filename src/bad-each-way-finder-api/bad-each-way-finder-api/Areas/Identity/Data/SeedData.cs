@@ -24,16 +24,16 @@ namespace bad_each_way_finder_api.Areas.Identity.Data
         public static void SeedRoles()
         {
             // Create the "Admin" role if it doesn't exist
-            if (!_roleManager.RoleExistsAsync(UserRoles.Admin).Result)
+            if (!_roleManager.RoleExistsAsync(UserRoles.Admin.ToString()).Result)
             {
-                var adminRole = new IdentityRole(UserRoles.Admin);
+                var adminRole = new IdentityRole(UserRoles.Admin.ToString());
                 var result = _roleManager.CreateAsync(adminRole).Result;
             }
 
             // Create the "User" role if it doesn't exist
-            if (!_roleManager.RoleExistsAsync(UserRoles.User).Result)
+            if (!_roleManager.RoleExistsAsync(UserRoles.User.ToString()).Result)
             {
-                var userRole = new IdentityRole(UserRoles.User);
+                var userRole = new IdentityRole(UserRoles.User.ToString());
                 var result = _roleManager.CreateAsync(userRole).Result; 
             }
         }
@@ -76,11 +76,17 @@ namespace bad_each_way_finder_api.Areas.Identity.Data
 
                         if (user.UserName == "admin@email.com")
                         {
-                            var addRoleResult = _userManager.AddToRolesAsync(user, new[] { UserRoles.Admin }).Result;
+                            var addRoleResult = _userManager.AddToRolesAsync(user, new[] 
+                            { 
+                                UserRoles.Admin.ToString() 
+                            }).Result;
                         }
                         if (user.UserName == "user@email.com")
                         {
-                            var addRoleResult = _userManager.AddToRolesAsync(user, new[] { UserRoles.User }).Result;
+                            var addRoleResult = _userManager.AddToRolesAsync(user, new[] 
+                            { 
+                                UserRoles.User.ToString() 
+                            }).Result;
                         }
                         // Add roles to the user
                     }

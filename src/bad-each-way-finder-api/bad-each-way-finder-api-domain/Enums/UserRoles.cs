@@ -1,7 +1,7 @@
 ﻿namespace bad_each_way_finder_api_domain.Enums;
 
-public static class UserRoles
+public enum UserRoles
 {
-    public const string Admin = "Admin";
-    public const string User = "User";
+    Admin = 0,
+    User = 1,
 }

@@ -91,7 +91,7 @@ namespace bad_each_way_finder_api.Controllers
                         Message = "User creation failed! Please check user details and try again."
                     });
 
-            foreach (var role in model.Roles!)
+            foreach (var role in model.UserRoles!)
             {
                 if (!await _roleManager.RoleExistsAsync(role))
                 {
