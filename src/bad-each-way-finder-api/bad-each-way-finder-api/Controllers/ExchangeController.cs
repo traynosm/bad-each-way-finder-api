@@ -1,6 +1,7 @@
 ﻿using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_exchange.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 
 namespace bad_each_way_finder_api.Controllers
 {
@@ -11,17 +12,26 @@ namespace bad_each_way_finder_api.Controllers
     {
         private readonly IExchangeHandler _exchangeHandler;
         private readonly IExchangeDatabaseService _databaseService;
+        private readonly ITokenService _tokenService;
 
-        public ExchangeController(IExchangeHandler exchangeHandler, IExchangeDatabaseService databaseService)
+
+        public ExchangeController(IExchangeHandler exchangeHandler, IExchangeDatabaseService databaseService,
+            ITokenService tokenService)
         {
             _exchangeHandler = exchangeHandler;
             _databaseService = databaseService;
+            _tokenService = tokenService;
         }
 
         [HttpGet]
-        [Route("GetExchangeEventTypes")]
-        public IActionResult GetExchangeEventTypes()
+        [Route("GetExchangeEventTypes/{token}")]
+        public IActionResult GetExchangeEventTypes(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _exchangeHandler.TryLogin();
 
             if (loginSuccess)
@@ -36,9 +46,14 @@ namespace bad_each_way_finder_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetExchangeEvents")]
-        public IActionResult GetExchangeEvents()
+        [Route("GetExchangeEvents/{token}")]
+        public IActionResult GetExchangeEvents(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _exchangeHandler.TryLogin();
 
             if (loginSuccess)
@@ -53,9 +68,14 @@ namespace bad_each_way_finder_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetMarketCatalogues")]
-        public IActionResult GetMarketCatalogues()
+        [Route("GetMarketCatalogues/{token}")]
+        public IActionResult GetMarketCatalogues(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _exchangeHandler.TryLogin();
 
             if (loginSuccess)
@@ -70,9 +90,14 @@ namespace bad_each_way_finder_api.Controllers
             }
         }
         [HttpGet]
-        [Route("GetMarketBooks")]
-        public IActionResult GetMarketBooks()
+        [Route("GetMarketBooks/{token}")]
+        public IActionResult GetMarketBooks(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _exchangeHandler.TryLogin();
 
             if (loginSuccess)
@@ -89,7 +114,5 @@ namespace bad_each_way_finder_api.Controllers
                 return BadRequest(string.Empty);
             }
         }
-
-
     }
 }

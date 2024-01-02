@@ -1,5 +1,6 @@
 ﻿using bad_each_way_finder_api.Areas.Identity.Data;
 using bad_each_way_finder_api.Settings;
+using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_domain.DTO;
 using bad_each_way_finder_api_domain.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -19,16 +20,17 @@ namespace bad_each_way_finder_api.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly BadEachWayFinderApiContext _context;
         private readonly IOptions<IdentitySettings> _identitySettings;
+        private readonly ITokenService _tokenService;
 
         public IdentityController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, 
-            BadEachWayFinderApiContext context, IOptions<IdentitySettings> identitySettings)
+            BadEachWayFinderApiContext context, IOptions<IdentitySettings> identitySettings,
+            ITokenService tokenService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _context = context;
             _identitySettings = identitySettings;
+            _tokenService = tokenService;
         }
 
         [HttpPost]
@@ -139,6 +141,8 @@ namespace bad_each_way_finder_api.Controllers
                 expires: DateTime.Now.AddHours(3),
                 claims: authClaims,
                 signingCredentials: credentials);
+
+            _tokenService.AddToken(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);            
 
             return token;
         }

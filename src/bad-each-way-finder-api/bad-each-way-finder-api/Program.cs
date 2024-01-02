@@ -133,12 +133,14 @@ namespace bad_each_way_finder_api
 
             builder.Services.AddScoped<IRaceService, RaceService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddSingleton<ITokenService, TokenService>();
 
             builder.Services.AddScoped<IExchangeDatabaseService, ExchangeDatabaseService>();
             builder.Services.AddScoped<ISportsbookDatabaseService, SportsbookDatabaseService>();
             builder.Services.AddScoped<IAccountDatabaseService, AccountDatabaseService>();
             builder.Services.AddScoped<IPropositionDatabaseService, PropositionDatabaseService>();
             builder.Services.AddScoped<IRaceDatabaseService, RaceDatabaseService>();
+
 
             builder.Services.AddScoped<IScopedRacingWorker, ScopedRacingWorker>();
             builder.Services.AddHostedService<RacingWorker>();
@@ -162,6 +164,8 @@ namespace bad_each_way_finder_api
             builder.Services.Configure<RaceWorkerSettings>(o =>
             configuration.GetSection("RaceWorkerSettings")
                 .Bind(o));
+
+            builder.Services.AddMemoryCache();
 
             var app = builder.Build();
 

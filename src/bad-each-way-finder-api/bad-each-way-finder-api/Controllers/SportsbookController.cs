@@ -1,6 +1,7 @@
 ﻿using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_sportsbook.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 
 namespace bad_each_way_finder_api.Controllers
 {
@@ -10,17 +11,25 @@ namespace bad_each_way_finder_api.Controllers
     {
         private readonly ISportsbookHandler _sportsbookHandler;
         private readonly ISportsbookDatabaseService _databaseService;
+        private readonly ITokenService _tokenService;
 
-        public SportsbookController(ISportsbookHandler sportsbookHandler, ISportsbookDatabaseService databaseService)
+        public SportsbookController(ISportsbookHandler sportsbookHandler, ISportsbookDatabaseService databaseService,
+            ITokenService tokenService)
         {
             _sportsbookHandler = sportsbookHandler;
             _databaseService = databaseService;
+            _tokenService = tokenService;
         }
 
         [HttpGet]
-        [Route("GetSportsbookEventTypes")]
-        public IActionResult GetSportsbookEventTypes()
+        [Route("GetSportsbookEventTypes/{token}")]
+        public IActionResult GetSportsbookEventTypes(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _sportsbookHandler.TryLogin();
 
             if (loginSuccess)
@@ -35,9 +44,14 @@ namespace bad_each_way_finder_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetSportsbookEventsByEventType")]
-        public IActionResult GetSportsbookEventsByEventType()
+        [Route("GetSportsbookEventsByEventType/{token}")]
+        public IActionResult GetSportsbookEventsByEventType(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _sportsbookHandler.TryLogin();
 
             if (loginSuccess)
@@ -52,9 +66,14 @@ namespace bad_each_way_finder_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetMarketCatalogue")]
-        public IActionResult GetMarketCatalogue()
+        [Route("GetMarketCatalogue/{token}")]
+        public IActionResult GetMarketCatalogue(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _sportsbookHandler.TryLogin();
 
             if (loginSuccess)
@@ -71,9 +90,14 @@ namespace bad_each_way_finder_api.Controllers
         }
 
         [HttpGet]
-        [Route("GetMarketPrices")]
-        public IActionResult GetMarketPrices()
+        [Route("GetMarketPrices/{token}")]
+        public IActionResult GetMarketPrices(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            };
+
             var loginSuccess = _sportsbookHandler.TryLogin();
 
             if (loginSuccess)

@@ -11,15 +11,21 @@ namespace bad_each_way_finder_api.Controllers
     public class PropositionController : ControllerBase
     {
         private readonly IRaceService _raceService;
+        private readonly ITokenService _tokenService;
 
-        public PropositionController(IRaceService raceService)
+        public PropositionController(IRaceService raceService, ITokenService tokenService)
         {
             _raceService = raceService;   
+            _tokenService = tokenService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(string token)
         {
+            if (!_tokenService.ValidateToken(token))
+            {
+                return BadRequest("Invalid Token");
+            }
             var races = await _raceService.BuildRaces();
             var livePropositions = _raceService.DetermineLivePropositions(races);
             var raisedPropositions = _raceService.GetRaisedPropositionsForTimeRange(
