@@ -15,6 +15,11 @@ namespace bad_each_way_finder_api.Repository
 
         public Account GetOrAddAccount(string IdentityUserName)
         {
+            if(string.IsNullOrEmpty(IdentityUserName))
+            {
+                throw new InvalidDataException("IdentityUserName is null/empty, cannot continue.");
+            }
+
             var accountExists = _context.Accounts
                 .Any(p => p.IdenityUserName == IdentityUserName);
 
@@ -23,6 +28,11 @@ namespace bad_each_way_finder_api.Repository
                 var account = _context.Accounts
                     .Include(p => p.AccountPropositions)
                     .FirstOrDefault(p => p.IdenityUserName == IdentityUserName);
+
+                if (account == null)
+                {
+                    throw new ArgumentNullException($"Could not find account: {IdentityUserName}");
+                }
 
                 return account;
             }
@@ -35,6 +45,7 @@ namespace bad_each_way_finder_api.Repository
 
             _context.Accounts.Add(newAccount);
             _context.SaveChanges();
+
             return newAccount;
         }
 

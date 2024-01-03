@@ -22,21 +22,28 @@ namespace bad_each_way_finder_api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string token)
         {
-            if (!_tokenService.ValidateToken(token))
+            try
             {
-                return BadRequest("Invalid Token");
+                if (!_tokenService.ValidateToken(token))
+                {
+                    return BadRequest("Invalid Token");
+                }
+                var races = await _raceService.BuildRaces();
+                var livePropositions = _raceService.DetermineLivePropositions(races);
+                var raisedPropositions = _raceService.GetRaisedPropositionsForTimeRange(
+                    BetFairQueryExtensions.RacingQueryTimeRange());
+                var dto = new RacesAndPropositionsDTO()
+                {
+                    Races = races,
+                    LivePropositions = livePropositions,
+                    RaisedPropositions = raisedPropositions
+                };
+                return Ok(dto);
             }
-            var races = await _raceService.BuildRaces();
-            var livePropositions = _raceService.DetermineLivePropositions(races);
-            var raisedPropositions = _raceService.GetRaisedPropositionsForTimeRange(
-                BetFairQueryExtensions.RacingQueryTimeRange());
-            var dto = new RacesAndPropositionsDTO()
+            catch (Exception ex)
             {
-                Races = races,
-                LivePropositions = livePropositions,
-                RaisedPropositions = raisedPropositions
-            };
-            return Ok(dto);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

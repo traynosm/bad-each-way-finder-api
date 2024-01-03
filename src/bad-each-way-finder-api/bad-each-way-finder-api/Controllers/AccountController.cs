@@ -23,49 +23,70 @@ namespace bad_each_way_finder_api.Controllers
         [HttpGet("GetAccountPropositions/{userName}/{token}")]
         public IActionResult GetAccountPropositions(string userName, string token)
         {
-            if (!_tokenService.ValidateToken(token))
+            try
             {
-                return BadRequest("Invalid Token");
+                if (!_tokenService.ValidateToken(token))
+                {
+                    return BadRequest("Invalid Token");
+                }
+                return Ok(_accountService.GetAccountPropositions(userName));
             }
-            return Ok(_accountService.GetAccountPropositions(userName));
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("PostRaisedProposition")]
         public IActionResult PostRaisedProposition(RaisedPropositionDto raisedPropositionDto)
         {
-            if (raisedPropositionDto == null)
+            try
             {
-                return BadRequest("Data is null");
-            }
+                if (raisedPropositionDto == null)
+                {
+                    return BadRequest("Data is null");
+                }
 
-            if (!_tokenService.ValidateToken(raisedPropositionDto.Token))
+                if (!_tokenService.ValidateToken(raisedPropositionDto.Token))
+                {
+                    return BadRequest("Invalid Token");
+                }
+
+                var accountPropositions = _accountService.SaveAccountProposition(raisedPropositionDto);
+
+                return Ok(accountPropositions);
+            }
+            catch (Exception ex)
             {
-                return BadRequest("Invalid Token");
+                return BadRequest(ex.Message);
             }
-
-            var accountPropositions = _accountService.SaveAndGetAccountPropositions(raisedPropositionDto);
-
-            return Ok(accountPropositions);
         }
 
         [HttpPost]
         [Route("RemoveAccountProposition")]
         public IActionResult RemoveAccountProposition(RaisedPropositionDto raisedPropositionDto)
         {
-            if (raisedPropositionDto == null)
+            try
             {
-                return BadRequest("Data is null");
-            }
+                if (raisedPropositionDto == null)
+                {
+                    return BadRequest("Data is null");
+                }
 
-            if (!_tokenService.ValidateToken(raisedPropositionDto.Token))
+                if (!_tokenService.ValidateToken(raisedPropositionDto.Token))
+                {
+                    return BadRequest("Invalid Token");
+                }
+
+                var accountPropositions = _accountService.DeleteAndGetAccountPropositions(raisedPropositionDto);
+
+                return Ok(accountPropositions);
+            }
+            catch(Exception ex)
             {
-                return BadRequest("Invalid Token");
+                return BadRequest(ex.Message);
             }
-
-            var accountPropositions = _accountService.DeleteAndGetAccountPropositions(raisedPropositionDto);
-
-            return Ok(accountPropositions);
         }
     }
 }

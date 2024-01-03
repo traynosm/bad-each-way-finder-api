@@ -58,8 +58,15 @@ namespace bad_each_way_finder_api.Controllers
 
             if (loginSuccess)
             {
-                var result = _exchangeHandler.ListEvents();
-                return Ok(result);
+                try
+                {
+                    var result = _exchangeHandler.ListEvents();
+                    return Ok(result);
+                }
+                catch(Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else
             {

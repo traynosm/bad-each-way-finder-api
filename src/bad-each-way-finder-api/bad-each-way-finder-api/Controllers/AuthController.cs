@@ -20,13 +20,20 @@ namespace bad_each_way_finder_api.Controllers
         [HttpGet]
         public ActionResult Login(string token)
         {
-            if (!_tokenService.ValidateToken(token))
+            try
             {
-                return BadRequest("Invalid Token");
-            };
-            var loginSuccess = _authHandler.Login(
-                "", "", Bookmaker.BetfairExchange);
-            return Ok(loginSuccess);
+                if (!_tokenService.ValidateToken(token))
+                {
+                    return BadRequest("Invalid Token");
+                };
+                var loginSuccess = _authHandler.Login(
+                    "", "", Bookmaker.BetfairExchange);
+                return Ok(loginSuccess);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

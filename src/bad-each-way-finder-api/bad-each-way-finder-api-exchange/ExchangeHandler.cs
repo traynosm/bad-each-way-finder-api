@@ -70,10 +70,28 @@ namespace bad_each_way_finder_api_exchange
             marketFilter.MarketStartTime = time;
             marketFilter.MarketCountries = eventTypeId.CountryCodes();
 
-            var events = _exchangeClient?.ListEvents(marketFilter) ??
-                throw new NullReferenceException($"Events null.");
+            try
+            {
+                var events = _exchangeClient?.ListEvents(marketFilter) ??
+                    throw new NullReferenceException($"Events null.");
 
-            return events;
+                return events;
+            }
+            catch (NullReferenceException nullException)
+            {
+                Console.WriteLine(nullException.Message);
+                throw;
+            }
+            catch (APINGException apiException)
+            {
+                Console.WriteLine(apiException.ToString());
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public IList<MarketCatalogue> ListMarketCatalogues(
