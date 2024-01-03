@@ -130,6 +130,14 @@ namespace bad_each_way_finder_api.Controllers
             });
         }
 
+        [HttpGet]
+        [Route("Logout/{token}")]
+        public async Task<IActionResult> Logout(string token)
+        {
+            _tokenService.RemoveToken(token);
+            return Ok();
+        }
+
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_identitySettings.Value.Secret));

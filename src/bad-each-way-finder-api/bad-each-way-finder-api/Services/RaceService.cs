@@ -401,7 +401,7 @@ namespace bad_each_way_finder_api.Services
                     {
                         try
                         {
-                            if (runner.EachWayExpectedValue >= -0.01)
+                            if (runner.EachWayExpectedValue >= -0.10)
                             {
                                 var proposition = new Proposition(race, runner);
 

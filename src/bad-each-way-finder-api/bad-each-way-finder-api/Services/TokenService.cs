@@ -24,5 +24,10 @@ namespace bad_each_way_finder_api.Services
             }
             return true;
         }
+
+        public void RemoveToken(string token)
+        {
+            _memoryCache.Remove(token);
+        }
     }
 }

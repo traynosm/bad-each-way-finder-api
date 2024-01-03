@@ -4,5 +4,6 @@
     {
         void AddToken(string token, DateTime expiration);
         bool ValidateToken(string token);
+        void RemoveToken(string token);
     }
 }
