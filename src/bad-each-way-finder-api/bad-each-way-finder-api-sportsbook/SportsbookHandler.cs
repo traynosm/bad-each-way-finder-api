@@ -46,11 +46,29 @@ namespace bad_each_way_finder_api_sportsbook
         {
             var marketFilter = new MarketFilter();
 
-            var eventTypes = _client?
-                    .ListEventTypes(marketFilter) ??
-                throw new NullReferenceException($"Event Types null.");
+            try
+            {
+                var eventTypes = _client?
+                        .ListEventTypes(marketFilter) ??
+                    throw new NullReferenceException($"Event Types null.");
 
-            return eventTypes;
+                return eventTypes;
+            }
+            catch (NullReferenceException nullException)
+            {
+                Console.WriteLine(nullException.Message);
+                throw;
+            }
+            catch (APINGException apiException)
+            {
+                Console.WriteLine(apiException.ToString());
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public IEnumerable<Event> ListEventsByEventType(
@@ -72,13 +90,31 @@ namespace bad_each_way_finder_api_sportsbook
                 time = timeRange;
             }
 
-            var events = _client?
-                    .ListEventsByEventType(eventTypeId, time) ??
-                throw new NullReferenceException($"Events null.");
+            try
+            {
+                var events = _client?
+                        .ListEventsByEventType(eventTypeId, time) ??
+                    throw new NullReferenceException($"Events null.");
 
-            return events.Select(e => e.Event)
-                .Where(ev => eventTypeId.CountryCodes()
-                    .Contains(ev.CountryCode));
+                return events.Select(e => e.Event)
+                    .Where(ev => eventTypeId.CountryCodes()
+                        .Contains(ev.CountryCode));
+            }
+            catch (NullReferenceException nullException)
+            {
+                Console.WriteLine(nullException.Message);
+                throw;
+            }
+            catch (APINGException apiException)
+            {
+                Console.WriteLine(apiException.ToString());
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public IEnumerable<MarketCatalogue> ListMarketCatalogues(
@@ -92,29 +128,63 @@ namespace bad_each_way_finder_api_sportsbook
                     marketTypes = new List<string>() { "WIN" };
                     break;
             }
-            var marketCatalogues = _client?
-                .ListMarketCatalogue(new SportsbookMarketFilter()
-                {
-                    EventIds = eventIds,
-                    MarketTypes = marketTypes.ToArray(),
-                },
-            maxResults: "1000")
-                ??
-                throw new NullReferenceException($"Market Catalogues null.");
 
-            return marketCatalogues;
+            try
+            {
+                var marketCatalogues = _client?
+                    .ListMarketCatalogue(new SportsbookMarketFilter()
+                    {
+                        EventIds = eventIds,
+                        MarketTypes = marketTypes.ToArray(),
+                    },
+                maxResults: "1000")
+                    ??
+                    throw new NullReferenceException($"Market Catalogues null.");
+
+                return marketCatalogues;
+            }
+            catch (NullReferenceException nullException)
+            {
+                Console.WriteLine(nullException.Message);
+                throw;
+            }
+            catch (APINGException apiException)
+            {
+                Console.WriteLine(apiException.ToString());
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public MarketDetails ListPrices(IEnumerable<string> marketIds)
         {
-            var prices = _client?
-                    .ListMarketPrices(marketIds) ??
-                throw new NullReferenceException($"Prices null.");
+            try
+            {
+                var prices = _client?
+                        .ListMarketPrices(marketIds) ??
+                    throw new NullReferenceException($"Prices null.");
 
-            return prices;
+                return prices;
+            }
+            catch (NullReferenceException nullException)
+            {
+                Console.WriteLine(nullException.Message);
+                throw;
+            }
+            catch (APINGException apiException)
+            {
+                Console.WriteLine(apiException.ToString());
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
-
-
-
     }
 }

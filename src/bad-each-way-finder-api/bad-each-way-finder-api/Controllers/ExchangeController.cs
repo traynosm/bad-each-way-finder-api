@@ -1,7 +1,6 @@
 ﻿using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_exchange.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Common;
 
 namespace bad_each_way_finder_api.Controllers
 {

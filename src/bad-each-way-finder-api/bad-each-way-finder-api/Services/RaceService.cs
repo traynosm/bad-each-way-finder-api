@@ -395,8 +395,6 @@ namespace bad_each_way_finder_api.Services
 
             foreach (var race in races)
             {
-                try 
-                { 
                     foreach (var runner in race.Runners)
                     {
                         try
@@ -411,67 +409,77 @@ namespace bad_each_way_finder_api.Services
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("");
+                            Console.WriteLine($"Exception raised adding proposition for runner:{runner.RunnerName}");
                         }
                     }
-                }
-
-                catch (Exception ex)
-                {
-                    Console.WriteLine("");
-                }
             }
             return result;
         }
 
         public List<Proposition> GetRaisedPropositionsForTimeRange(TimeRange timeRange)
         {
-            var todaysSavedPropositions = _propositionDatabaseService.GetRaisedPropositionsForTimeRange(timeRange);
-            
-            foreach (var proposition in todaysSavedPropositions)
+            try
             {
-                var race = _raceDatabaseService.GetRace(proposition.SportsbookWinMarketId);
-                var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
-                var raceRule4Deductions = _sportsbookDatabaseService.RaceRule4Deductions(proposition.SportsbookWinMarketId);
+                var todaysSavedPropositions = _propositionDatabaseService.GetRaisedPropositionsForTimeRange(timeRange);
 
-                proposition.FinalAdjustedOddsDecimal = proposition.WinRunnerOddsDecimal;
-                proposition.SportsbookNumberOfPlaces = race.SportsbookNumberOfPlaces;
-                proposition.SportsbookPlaceFractionDenominator = race.SportsbookPlaceFractionDenominator;
-
-                if(raceRule4Deductions.Any())
+                foreach (var proposition in todaysSavedPropositions)
                 {
-                    foreach(var deduction in raceRule4Deductions)
+                    try
                     {
-                        if(proposition.RecordedAt >= deduction.timeFrom && proposition.RecordedAt <= deduction.timeTo)
+                        var race = _raceDatabaseService.GetRace(proposition.SportsbookWinMarketId);
+                        var runnerInfo = _raceDatabaseService.GetRunnerInfo($"{proposition.EventId}{proposition.RunnerSelectionId}");
+                        var raceRule4Deductions = _sportsbookDatabaseService.RaceRule4Deductions(proposition.SportsbookWinMarketId);
+
+                        proposition.FinalAdjustedOddsDecimal = proposition.WinRunnerOddsDecimal;
+                        proposition.SportsbookNumberOfPlaces = race.SportsbookNumberOfPlaces;
+                        proposition.SportsbookPlaceFractionDenominator = race.SportsbookPlaceFractionDenominator;
+
+                        if (raceRule4Deductions.Any())
                         {
-                            proposition.Rule4Deduction = deduction.deduction;
-                            proposition.FinalAdjustedOddsDecimal = ((proposition.WinRunnerOddsDecimal - 1) * ((100 - proposition.Rule4Deduction) / 100)) + 1;
-                            break;
+                            foreach (var deduction in raceRule4Deductions)
+                            {
+                                if (proposition.RecordedAt >= deduction.timeFrom && proposition.RecordedAt <= deduction.timeTo)
+                                {
+                                    proposition.Rule4Deduction = deduction.deduction;
+                                    proposition.FinalAdjustedOddsDecimal = ((proposition.WinRunnerOddsDecimal - 1) * ((100 - proposition.Rule4Deduction) / 100)) + 1;
+                                    break;
+                                }
+                            }
                         }
+
+                        proposition.LatestWinPrice = runnerInfo.ExchangeWinPrice;
+                        proposition.LatestPlacePrice = runnerInfo.ExchangePlacePrice;
+
+                        if (runnerInfo.ExchangeWinPrice > 0)
+                        {
+                            proposition.LatestWinExpectedValue = proposition.WinRunnerOddsDecimal.ExpectedValue(
+                                proposition.LatestWinPrice);
+
+                        }
+
+                        if (runnerInfo.ExchangePlacePrice > 0)
+                        {
+                            var placeExpectedValue = proposition.EachWayPlacePart.ExpectedValue(proposition.LatestPlacePrice);
+
+                            proposition.LatestEachWayExpectedValue = (proposition.LatestWinExpectedValue + placeExpectedValue) / 2;
+                        }
+
+                        //Update Latest values to proposition
+                        _propositionDatabaseService.AddProposition(proposition);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        continue;
                     }
                 }
-
-                proposition.LatestWinPrice = runnerInfo.ExchangeWinPrice;
-                proposition.LatestPlacePrice = runnerInfo.ExchangePlacePrice;
-
-                if(runnerInfo.ExchangeWinPrice > 0)
-                {
-                    proposition.LatestWinExpectedValue = proposition.WinRunnerOddsDecimal.ExpectedValue(
-                        proposition.LatestWinPrice);
-
-                }
-
-                if(runnerInfo.ExchangePlacePrice > 0)
-                {
-                    var placeExpectedValue = proposition.EachWayPlacePart.ExpectedValue(proposition.LatestPlacePrice);
-
-                    proposition.LatestEachWayExpectedValue = (proposition.LatestWinExpectedValue + placeExpectedValue) / 2;
-                }
-
-                //Update Latest values to proposition
-                _propositionDatabaseService.AddProposition(proposition);
+                return todaysSavedPropositions;
             }
-            return todaysSavedPropositions;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
         private MarketDetails GetMarketDetails() 
         {
@@ -479,15 +487,23 @@ namespace bad_each_way_finder_api.Services
 
             if (loginSuccess)
             {
-                var eventIds = _sportsbookHandler.ListEventsByEventType("7");
-                var eId = _sportsbookHandler.ListMarketCatalogues(eventIds.Select(
-                    e => e.Id).ToHashSet());
-                var result = _sportsbookHandler.ListPrices(eId.Select(
-                    e => e.MarketId).ToList());
+                try
+                {
+                    var eventIds = _sportsbookHandler.ListEventsByEventType("7");
+                    var eId = _sportsbookHandler.ListMarketCatalogues(eventIds.Select(
+                        e => e.Id).ToHashSet());
+                    var result = _sportsbookHandler.ListPrices(eId.Select(
+                        e => e.MarketId).ToList());
 
-                _sportsbookDatabaseService.AddOrUpdateMarketDetails(result);
+                    _sportsbookDatabaseService.AddOrUpdateMarketDetails(result);
 
-                return result;
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw;
+                }
             }
             else
             {
@@ -501,9 +517,17 @@ namespace bad_each_way_finder_api.Services
 
             if (loginSuccess)
             {
-                var result = _exchangeHandler.ListMarketBooks(marketIds);
+                try
+                {
+                    var result = _exchangeHandler.ListMarketBooks(marketIds);
 
-                return result;
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw;
+                }
             }
             else
             {

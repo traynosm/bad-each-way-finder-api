@@ -1,5 +1,4 @@
 ﻿using bad_each_way_finder_api_domain.CommonInterfaces;
-using bad_each_way_finder_api_domain.DomainModel;
 using bad_each_way_finder_api_domain.DTO;
 using bad_each_way_finder_api_domain.Extensions;
 using Microsoft.AspNetCore.Mvc;

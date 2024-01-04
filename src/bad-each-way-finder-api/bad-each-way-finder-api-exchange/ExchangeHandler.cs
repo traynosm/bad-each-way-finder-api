@@ -45,12 +45,30 @@ namespace bad_each_way_finder_api_exchange
         public IList<EventTypeResult> ListEventTypes()
         {
             var marketFilter = new MarketFilter();
+            try
+            {
+                var eventTypes = _exchangeClient?.ListEventTypes(marketFilter) ??
+                    throw new NullReferenceException($"Event Types null.");
 
-            var eventTypes = _exchangeClient?.ListEventTypes(marketFilter) ??
-                throw new NullReferenceException($"Event Types null.");
-
-            return eventTypes;
+                return eventTypes;
+            }
+            catch (NullReferenceException nullException)
+            {
+                Console.WriteLine(nullException.Message);
+                throw;
+            }
+            catch (APINGException apiException)
+            {
+                Console.WriteLine(apiException.ToString());
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
+
         public IList<EventResult> ListEvents(
             string eventTypeId = "7", TimeRange? timeRange = null)
         {
@@ -130,10 +148,28 @@ namespace bad_each_way_finder_api_exchange
             marketProjections.Add(MarketProjection.EVENT_TYPE);
             marketProjections.Add(MarketProjection.RUNNER_DESCRIPTION);
 
-            var marketCatalogues = _exchangeClient!.ListMarketCatalogue(
-                marketFilter, marketProjections, marketSort, maxResults);
+            try
+            {
+                var marketCatalogues = _exchangeClient!.ListMarketCatalogue(
+                    marketFilter, marketProjections, marketSort, maxResults);
 
-            return marketCatalogues;
+                return marketCatalogues;
+            }
+            catch (NullReferenceException nullException)
+            {
+                Console.WriteLine(nullException.Message);
+                throw;
+            }
+            catch (APINGException apiException)
+            {
+                Console.WriteLine(apiException.ToString());
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public IList<MarketBook> ListMarketBooks(IList<string> marketIds)
@@ -152,8 +188,26 @@ namespace bad_each_way_finder_api_exchange
 
             foreach(var batch in marketIds.Chunk(10))
             {
-                marketBooks.AddRange(_exchangeClient!.ListMarketBook(
-                     batch, priceProjection));
+                try
+                {
+                    marketBooks.AddRange(_exchangeClient!.ListMarketBook(
+                         batch, priceProjection));
+                }
+                catch (NullReferenceException nullException)
+                {
+                    Console.WriteLine(nullException.Message);
+                    continue;
+                }
+                catch (APINGException apiException)
+                {
+                    Console.WriteLine(apiException.ToString());
+                    continue;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
             }
 
             return marketBooks;
