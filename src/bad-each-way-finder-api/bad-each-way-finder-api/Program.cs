@@ -165,9 +165,12 @@ namespace bad_each_way_finder_api
             configuration.GetSection("RaceWorkerSettings")
                 .Bind(o));
 
+            builder.Services.AddHealthChecks();
+
             builder.Services.AddMemoryCache();
 
             var app = builder.Build();
+            app.UseHealthChecks("/health");
 
             using (var scope = app.Services.CreateScope())
             {
