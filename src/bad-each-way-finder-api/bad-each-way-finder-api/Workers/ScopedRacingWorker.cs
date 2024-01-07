@@ -13,7 +13,14 @@ namespace bad_each_way_finder_api.Workers
 
         public async Task DoWorkAsync(CancellationToken stoppingToken)
         {
-            await _raceService.BuildRaces();
+            try
+            {
+                await _raceService.BuildRaces();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ScopedRacingWorker caught Exception building races: {ex.Message}");
+            }
         }
     }
 }
