@@ -1,10 +1,12 @@
-﻿using bad_each_way_finder_api_domain.CommonInterfaces;
+﻿using bad_each_way_finder_api.Settings;
+using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_domain.DomainModel;
 using bad_each_way_finder_api_domain.Exchange;
 using bad_each_way_finder_api_domain.Extensions;
 using bad_each_way_finder_api_domain.Sportsbook;
 using bad_each_way_finder_api_exchange.Interfaces;
 using bad_each_way_finder_api_sportsbook.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace bad_each_way_finder_api.Services
 {
@@ -16,10 +18,12 @@ namespace bad_each_way_finder_api.Services
         private readonly IPropositionDatabaseService _propositionDatabaseService;
         private readonly IRaceDatabaseService _raceDatabaseService;
         private readonly ISportsbookDatabaseService _sportsbookDatabaseService;
+        private readonly IOptions<RaceServiceSettings> _options;
 
         public RaceService(IExchangeHandler exchangeHandler, ISportsbookHandler sportsbookHandler,
             ILogger<RaceService> logger, IPropositionDatabaseService propositionDatabaseService,
-            IRaceDatabaseService raceDatabaseService, ISportsbookDatabaseService sportsbookDatabaseService)
+            IRaceDatabaseService raceDatabaseService, ISportsbookDatabaseService sportsbookDatabaseService, 
+            IOptions<RaceServiceSettings> options)
         {
             _exchangeHandler = exchangeHandler;
             _sportsbookHandler = sportsbookHandler;
@@ -27,6 +31,7 @@ namespace bad_each_way_finder_api.Services
             _propositionDatabaseService = propositionDatabaseService;
             _raceDatabaseService = raceDatabaseService;
             _sportsbookDatabaseService = sportsbookDatabaseService;
+            _options = options;
         }
 
         public async Task<List<Race>> BuildRaces()
@@ -395,23 +400,30 @@ namespace bad_each_way_finder_api.Services
 
             foreach (var race in races)
             {
-                    foreach (var runner in race.Runners)
+                foreach (var runner in race.Runners)
+                {
+                    try
                     {
-                        try
+                        if (runner.EachWayExpectedValue >= _options.Value.RaceServiceMinimunEvThreshold)
                         {
-                            if (runner.EachWayExpectedValue >= -0.10)
-                            {
-                                var proposition = new Proposition(race, runner);
+                            var proposition = new Proposition(race, runner);
 
-                                result.Add(proposition);
-                                _propositionDatabaseService.AddProposition(proposition);
+                            var isNew = _propositionDatabaseService.AddProposition(proposition);
+
+                            if (isNew)
+                            {
+                                proposition.IsNewlyRaised = true;
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Exception raised adding proposition for runner:{runner.RunnerName}");
+
+                            result.Add(proposition);
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception raised adding proposition for runner:" +
+                            $"{runner.RunnerName}");
+                    }
+                }
             }
             return result;
         }

@@ -12,23 +12,27 @@ namespace bad_each_way_finder_api.Repository
         {
         }
 
-        public void AddProposition(Proposition proposition)
+        public bool AddProposition(Proposition proposition)
         {
-            var raisedProposition = _context.Propositions.FirstOrDefault(p => 
+            bool isNew = false;
+            
+            var existingRaisedProposition = _context.Propositions.FirstOrDefault(p => 
                 p.WinRunnerOddsDecimal == proposition.WinRunnerOddsDecimal && 
                 p.RunnerName == proposition.RunnerName &&
                 p.EventId == proposition.EventId);
 
-            if (raisedProposition == null)
+            if (existingRaisedProposition == null)
             {
                 _context.Propositions.Add(proposition);
+                isNew = true;
             }
             else
             {
-                _context.Entry(raisedProposition).CurrentValues.SetValues(proposition);
+                _context.Entry(existingRaisedProposition).CurrentValues.SetValues(proposition);
             }
 
             _context.SaveChanges();
+            return isNew;
         }
 
         public List<Proposition> GetRaisedPropositionsForTimeRange(TimeRange timeRange)

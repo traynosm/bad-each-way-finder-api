@@ -1,4 +1,5 @@
 ﻿using bad_each_way_finder_api_domain.Extensions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace bad_each_way_finder_api_domain.DomainModel
 {
@@ -50,6 +51,9 @@ namespace bad_each_way_finder_api_domain.DomainModel
         public double LatestWinExpectedValue { get; set; }
         public double LatestEachWayExpectedValue { get; set; }
         public double FinalAdjustedOddsDecimal { get; set; }
+
+        [NotMapped]
+        public bool IsNewlyRaised { get; set; }
 
         public Proposition()
         {

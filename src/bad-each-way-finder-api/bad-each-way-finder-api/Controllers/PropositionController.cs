@@ -29,13 +29,16 @@ namespace bad_each_way_finder_api.Controllers
                 }
                 var races = await _raceService.BuildRaces();
                 var livePropositions = _raceService.DetermineLivePropositions(races);
+                var newlyRaisedPropositions = livePropositions.Where(p => p.IsNewlyRaised).ToList();   
                 var raisedPropositions = _raceService.GetRaisedPropositionsForTimeRange(
                     BetFairQueryExtensions.RacingQueryTimeRange());
+
                 var dto = new RacesAndPropositionsDTO()
                 {
                     Races = races,
                     LivePropositions = livePropositions,
-                    RaisedPropositions = raisedPropositions
+                    RaisedPropositions = raisedPropositions,
+                    NewlyRaisedPropositions = newlyRaisedPropositions 
                 };
                 return Ok(dto);
             }

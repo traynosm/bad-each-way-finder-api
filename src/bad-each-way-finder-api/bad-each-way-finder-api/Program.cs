@@ -165,6 +165,10 @@ namespace bad_each_way_finder_api
             configuration.GetSection("RaceWorkerSettings")
                 .Bind(o));
 
+            builder.Services.Configure<RaceServiceSettings>(o =>
+            configuration.GetSection("RaceServiceSettings")
+                .Bind(o));
+
             builder.Services.AddHealthChecks();
 
             builder.Services.AddMemoryCache();
