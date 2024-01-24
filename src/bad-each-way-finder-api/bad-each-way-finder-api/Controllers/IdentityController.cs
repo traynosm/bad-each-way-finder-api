@@ -14,7 +14,7 @@ using System.Text;
 
 namespace bad_each_way_finder_api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class IdentityController : ControllerBase
     {
