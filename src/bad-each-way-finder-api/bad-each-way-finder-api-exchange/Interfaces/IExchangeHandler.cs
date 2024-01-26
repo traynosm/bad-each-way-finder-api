@@ -12,6 +12,5 @@ namespace bad_each_way_finder_api_exchange.Interfaces
             string eventTypeId = "7", TimeRange? timeRange = null, 
             IEnumerable<string>? eventIds = null);
         IList<MarketBook> ListMarketBooks(IList<string> marketIds);
-
     }
 }

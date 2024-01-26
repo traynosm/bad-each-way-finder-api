@@ -11,6 +11,5 @@ namespace bad_each_way_finder_api_sportsbook.Interfaces
         IEnumerable<MarketCatalogue> ListMarketCatalogue(
             SportsbookMarketFilter marketFilter, string maxResults = "1", string? locale = null);
         MarketDetails ListMarketPrices(IEnumerable<string> marketIds);
-
     }
 }

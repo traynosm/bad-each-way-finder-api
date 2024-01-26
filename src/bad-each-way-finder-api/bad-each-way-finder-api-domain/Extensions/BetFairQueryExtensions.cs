@@ -70,9 +70,5 @@ namespace bad_each_way_finder_api_domain.Extensions
                 To = DateTime.Today.AddDays(2)
             }; ;
         }
-
     }
-
-
-
 }

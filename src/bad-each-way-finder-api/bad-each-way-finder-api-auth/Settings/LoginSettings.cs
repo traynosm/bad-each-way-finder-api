@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace bad_each_way_finder_api_auth.Settings
+﻿namespace bad_each_way_finder_api_auth.Settings
 {
     public class LoginSettings
     {

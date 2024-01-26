@@ -30,5 +30,4 @@ namespace bad_each_way_finder_api_exchange.Json
             return Newtonsoft.Json.JsonConvert.SerializeObject(value, settings);
         }
     }
-
 }

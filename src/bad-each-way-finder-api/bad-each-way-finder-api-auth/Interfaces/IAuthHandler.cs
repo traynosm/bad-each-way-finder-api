@@ -1,5 +1,4 @@
-﻿using System;
-using bad_each_way_finder_api_domain.Enums;
+﻿using bad_each_way_finder_api_domain.Enums;
 
 namespace bad_each_way_finder_api_auth.Interfaces
 {
@@ -13,4 +12,3 @@ namespace bad_each_way_finder_api_auth.Interfaces
         public string AppKey { get; }
     }
 }
-

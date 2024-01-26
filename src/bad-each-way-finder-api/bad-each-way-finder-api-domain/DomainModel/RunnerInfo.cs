@@ -29,7 +29,6 @@ namespace bad_each_way_finder_api_domain.DomainModel
         public double EachWayExpectedValue { get; set; }
         public string RunnerStatus { get; set; }
 
-
         public RunnerInfo() { }
 
         public RunnerInfo(RunnerInfo runner, Race race)

@@ -11,7 +11,6 @@ namespace bad_each_way_finder_api.Configuration
         {
             services.AddSingleton<ISportsbookClient, SportsbookClient>();
             services.AddSingleton<ISportsbookHandler, SportsbookHandler>();
-
         }
     }
 }

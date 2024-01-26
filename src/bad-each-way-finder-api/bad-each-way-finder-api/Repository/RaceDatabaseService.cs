@@ -1,8 +1,6 @@
 ﻿using bad_each_way_finder_api.Areas.Identity.Data;
 using bad_each_way_finder_api_domain.CommonInterfaces;
 using bad_each_way_finder_api_domain.DomainModel;
-using bad_each_way_finder_domain.DomainModel;
-using Microsoft.EntityFrameworkCore;
 
 namespace bad_each_way_finder_api.Repository
 {

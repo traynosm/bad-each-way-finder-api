@@ -23,9 +23,6 @@ namespace bad_each_way_finder_api_domain.DomainModel
         public double WinBsp { get; set; }
         public double PlaceBsp { get; set; }
 
-        //result field Win/Place/Lose
-
-
         //runner info
         public long RunnerSelectionId { get; set; }
         public string RunnerName { get; set; }

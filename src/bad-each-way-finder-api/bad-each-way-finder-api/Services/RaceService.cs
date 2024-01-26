@@ -173,8 +173,6 @@ namespace bad_each_way_finder_api.Services
                             $"EventName={mappedEvent.Name}; " +
                             $"MarketStartTime={sportsbookMarketDetail.marketStartTime}; " +
                             "Msg=No Mapped Exchange Place Market Book present, cannot continue; ");
-
-                        //continue;
                     }
                     else
                     {

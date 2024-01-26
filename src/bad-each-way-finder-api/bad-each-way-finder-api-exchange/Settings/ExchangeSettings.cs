@@ -3,8 +3,6 @@
     public class ExchangeSettings
     {
         public string Url { get; set; }
-
         public int RacingQueryToDays { get; set; }
-
     }
 }

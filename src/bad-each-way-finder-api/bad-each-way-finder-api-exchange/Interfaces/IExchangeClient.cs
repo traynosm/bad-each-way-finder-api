@@ -13,6 +13,5 @@ namespace bad_each_way_finder_api_exchange.Interfaces
             IList<string> marketIds, PriceProjection priceProjection, 
             OrderProjection? orderProjection = null, MatchProjection? matchProjection = null, 
             string currencyCode = null, string locale = null);
-
     }
 }

@@ -147,6 +147,3 @@ namespace Betfair.ExchangeComparison.Auth
         }
     }
 }
-
-
-

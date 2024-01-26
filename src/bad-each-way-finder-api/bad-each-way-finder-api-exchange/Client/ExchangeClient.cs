@@ -142,8 +142,5 @@ namespace bad_each_way_finder_api_exchange.Client
             args[LOCALE] = locale;
             return Invoke<List<MarketBook>>(LIST_MARKET_BOOK_METHOD, args);
         }
-
-
-
     }
 }

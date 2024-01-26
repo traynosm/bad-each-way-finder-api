@@ -50,7 +50,6 @@ namespace bad_each_way_finder_api_domain.Extensions
                 return ((WinRunnerOdds - 1) / (double)EachWayFraction) + 1;
             }
             return WinRunnerOdds;
-
         }
     }
 }

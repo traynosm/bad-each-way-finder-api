@@ -1,6 +1,5 @@
 ﻿using bad_each_way_finder_api_domain.Enums;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace bad_each_way_finder_api.Areas.Identity.Data
 {
@@ -88,12 +87,11 @@ namespace bad_each_way_finder_api.Areas.Identity.Data
                                 UserRoles.User.ToString() 
                             }).Result;
                         }
-                        // Add roles to the user
                     }
                     else
                     {
                         // Failed to create the user
-                        // Handle the error or log it
+                        Console.WriteLine($"Failed to create User={user.UserName}");
                     }
                 }
             }

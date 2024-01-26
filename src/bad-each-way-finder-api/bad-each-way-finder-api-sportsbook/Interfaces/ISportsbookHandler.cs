@@ -12,6 +12,5 @@ namespace bad_each_way_finder_api_sportsbook.Interfaces
         IEnumerable<MarketCatalogue> ListMarketCatalogues(
             ISet<string> eventIds, string eventTypeId = "7");
         MarketDetails ListPrices(IEnumerable<string> marketIds);
-
     }
 }

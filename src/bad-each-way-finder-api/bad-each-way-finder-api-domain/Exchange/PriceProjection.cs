@@ -15,7 +15,5 @@ namespace bad_each_way_finder_api_domain.Exchange
 
         [JsonProperty(PropertyName = "rolloverStakes")]
         public bool? RolloverStakes { get; set; }
-
-
     }
 }

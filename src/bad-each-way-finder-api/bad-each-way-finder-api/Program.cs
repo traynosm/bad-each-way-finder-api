@@ -198,14 +198,10 @@ namespace bad_each_way_finder_api
             app.UseAuthorization();
             app.UseAuthentication();
 
-            //app.MapControllers();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            
 
             app.Run();
         }

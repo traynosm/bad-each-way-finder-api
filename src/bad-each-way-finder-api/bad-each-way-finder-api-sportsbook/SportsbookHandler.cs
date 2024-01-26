@@ -16,7 +16,6 @@ namespace bad_each_way_finder_api_sportsbook
         private readonly IOptions<SportsbookSettings> _options;
         private readonly IAuthHandler _authHandler;
 
-
         public SportsbookHandler(ISportsbookClient client, IOptions<SportsbookSettings> options,
             IAuthHandler authHandler)
         {
