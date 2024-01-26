@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\bad-each-way-finder-api-auth\bad-each-way-finder-api-auth.csproj" />
-    <ProjectReference Include="..\bad-each-way-finder-api-data\bad-each-way-finder-api-data.csproj" />
     <ProjectReference Include="..\bad-each-way-finder-api-exchange\bad-each-way-finder-api-exchange.csproj" />
     <ProjectReference Include="..\bad-each-way-finder-api-sportsbook\bad-each-way-finder-api-sportsbook.csproj" />
   </ItemGroup>
