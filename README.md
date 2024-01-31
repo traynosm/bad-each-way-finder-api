@@ -18,7 +18,7 @@ dotnet ef migrations add initial
 ```console
 dotnet ef database update
 ```
-Commands will also need to run to set up user secrets
+Commands will also need to run to set up user secrets. Email the developer for BETFAIRUSERNAME, PASSWORD and APP_KEY.
 
 ```console
 dotnet user-secrets init
@@ -28,6 +28,7 @@ dotnet user-secrets set "LoginSettings:BETFAIRUSERNAME" "<secret_username>"
 dotnet user-secrets set "LoginSettings:PASSWORD" "<secret_password>"
 dotnet user-secrets set "LoginSettings:APP_KEY" "<secret_app_key>"
 ```
+
 
 Now run the bad-each-way-finder-api.
 
