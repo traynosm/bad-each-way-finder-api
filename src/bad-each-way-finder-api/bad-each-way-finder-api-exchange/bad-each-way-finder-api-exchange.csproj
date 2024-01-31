@@ -9,5 +9,12 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\bad-each-way-finder-api-auth\bad-each-way-finder-api-auth.csproj" />
+	  <ProjectReference Include="..\bad-each-way-finder-api-domain\bad-each-way-finder-api-domain.csproj" />
+	</ItemGroup>
 
 </Project>

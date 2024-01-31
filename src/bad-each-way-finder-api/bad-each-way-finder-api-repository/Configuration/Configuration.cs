@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using bad_each_way_finder_api_domain.CommonInterfaces;
+using bad_each_way_finder_api_repository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace bad_each_way_finder_api.Configuration
 {
@@ -11,7 +11,7 @@ namespace bad_each_way_finder_api.Configuration
     {
         public static void ConfigureRepository(this IServiceCollection services)
         {
-
+            services.AddSingleton<IDatabaseService, DatabaseService>();
         }
     }
 }
